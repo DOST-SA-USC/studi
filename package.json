@@ -9,7 +9,8 @@
     "astro": "astro",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.astro",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx,.astro --fix",
-    "prepare": "husky"
+    "prepare": "husky",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.0",
@@ -25,6 +26,7 @@
     "@commitlint/cli": "^20.0.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@eslint/js": "^9.36.0",
+    "@types/node": "^24.5.2",
     "@typescript-eslint/eslint-plugin": "^8.44.1",
     "@typescript-eslint/parser": "^8.44.1",
     "eslint": "^9.36.0",
@@ -40,6 +42,7 @@
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.14",
+    "typescript": "^5.9.2",
     "typescript-eslint": "^8.44.1"
   },
   "lint-staged": {
