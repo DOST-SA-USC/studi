@@ -8,12 +8,25 @@ export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   ...astro.configs['flat/recommended'],
+
   {
     files: ['**/*.astro'],
     languageOptions: {
       parser: astro.parser,
     },
   },
+
+  {
+    files: ['commitlint.config.cjs', 'eslint.config.mjs'],
+    languageOptions: {
+      globals: {
+        module: 'readonly',
+        require: 'readonly',
+        __dirname: 'readonly',
+      },
+    },
+  },
+
   {
     plugins: {
       prettier: prettierPlugin,
