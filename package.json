@@ -1,0 +1,53 @@
+{
+  "name": "studi",
+  "version": "0.0.2",
+  "author": "DOST-SA-USC",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "prepare": "husky",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.36.2",
+    "@astrojs/starlight-tailwind": "^4.0.2",
+    "@tailwindcss/vite": "^4.1.16",
+    "astro": "^5.15.3",
+    "astro-embed": "^0.9.1",
+    "astro-font": "^1.1.0",
+    "marked": "^16.4.1",
+    "sharp": "^0.34.4",
+    "vite": "^7.1.12"
+  },
+  "devDependencies": {
+    "@commitlint/config-conventional": "^20.0.0",
+    "astro-vtbot": "^2.1.9",
+    "commitlint": "^20.1.0",
+    "eslint": "^9.39.1",
+    "eslint-plugin-astro": "^1.5.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.6.2",
+    "prettier-plugin-astro": "^0.14.0",
+    "tailwindcss": "^4.1.16",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.47.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,mjs}": [
+      "eslint --fix"
+    ],
+    "*.{css,scss,md,json}": [
+      "prettier --write"
+    ],
+    "*.astro": [
+      "prettier --write"
+    ]
+  }
+}
