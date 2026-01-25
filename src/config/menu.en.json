@@ -10,20 +10,12 @@
     },
     {
       "name": "Notes",
-      "url": "/temp/"
-    },
-    {
-      "name": "Reference",
       "url": "",
       "hasChildren": true,
       "children": [
         {
-          "name": "Configuration",
-          "url": "/reference/configuration/"
-        },
-        {
-          "name": "Plugins Reference",
-          "url": "/reference/plugin/"
+          "name": "Temp",
+          "url": "/temp/temp"
         }
       ]
     }
