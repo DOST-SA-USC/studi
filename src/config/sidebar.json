@@ -1,7 +1,7 @@
 {
   "main": [
     {
-      "label": "Getting Started",
+      "label": "How to contribute",
       "translations": {
         "fr": "Commencer"
       },
@@ -53,17 +53,15 @@
     },
     {
       "label": "Reference",
-      "translations": {
-        "fr": "Référence"
-      },
       "autogenerate": { "directory": "reference" }
     },
     {
       "label": "Configurations",
-      "translations": {
-        "fr": "Configurations"
-      },
       "autogenerate": { "directory": "configurations" }
+    },
+    {
+      "label": "My Section",
+      "autogenerate": { "directory": "temp" }
     }
   ]
 }
