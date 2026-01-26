@@ -5,6 +5,10 @@
       "url": "/"
     },
     {
+      "name": "Contribute",
+      "url": "/contribute"
+    },
+    {
       "name": "Documentation",
       "url": "/getting-started/introduction/overview/"
     },
