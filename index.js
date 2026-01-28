@@ -1,14 +1,17 @@
+import "dotenv/config";
 import { google } from "googleapis";
-
 const SCOPES = ["https://www.googleapis.com/auth/drive.readonly"];
-const SERVICE_JSON = "../fresh-runway-468705-c2-4eb4e91c13b2.json";
 const FOLDER_MIMETYPE = "application/vnd.google-apps.folder";
 const SHORTCUT_MIMETYPE = "application/vnd.google-apps.shortcut";
 import slugify from "slugify";
 
 export async function getDriveClient() {
+  const credentials = JSON.parse(
+    Buffer.from(process.env.SERVICE_ACCOUNT, "base64").toString(),
+  );
+
   const auth = new google.auth.GoogleAuth({
-    keyFile: SERVICE_JSON,
+    credentials,
     scopes: SCOPES,
   });
   console.log("Successfully authenticated!");
