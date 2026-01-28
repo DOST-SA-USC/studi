@@ -26,13 +26,13 @@
 }
 
 .navbar {
-  @apply relative flex flex-wrap items-center justify-between;
+  @apply relative flex flex-wrap items-center justify-around;
 }
 .navbar-scrolled {
   @apply bg-lightmode-body dark:bg-body;
 }
 .navbar-brand {
-  @apply text-xl font-semibold flex items-center select-none;
+  @apply text-xl font-semibold text-primary flex items-center select-none no-underline;
   image {
     @apply max-h-full max-w-full;
   }
