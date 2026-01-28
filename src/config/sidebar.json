@@ -3,6 +3,10 @@
     {
       "label": "My Section",
       "autogenerate": { "directory": "temp" }
+    },
+    {
+      "label": "How to contribute",
+      "autogenerate": { "directory": "contribute" }
     }
   ]
 }
