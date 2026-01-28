@@ -5,8 +5,12 @@
       "url": "/"
     },
     {
-      "name": "How to contribute",
-      "url": "/contribute/temp"
+      "name": "Contribute",
+      "url": "/contribute"
+    },
+    {
+      "name": "Documentation",
+      "url": "/getting-started/introduction/overview/"
     },
     {
       "name": "FAQs",

@@ -1,7 +1,8 @@
 {
   "site": {
-    "title": "Studi",
-    "base_url": "https://studi.dostsausc.org",
+    "title": "Project Studi",
+    "description": "An open-source notes repository",
+    "email": "dostsausc.tech@gmail.com",
     "logo": "/src/assets/logo-light.svg",
     "logo_darkmode": "/src/assets/logo-dark.svg",
     "logo_width": "349",
