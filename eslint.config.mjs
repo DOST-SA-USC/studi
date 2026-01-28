@@ -1,10 +1,9 @@
-// eslint.config.mjs
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 import astro from "eslint-plugin-astro";
+import globals from "globals";
 
 export default [
-  // Ignore generated files
   {
     ignores: [".astro/**/*", "dist/**/*", "node_modules/**/*"],
   },
@@ -65,7 +64,13 @@ export default [
 
   {
     files: ["**/*.js", "**/*.mjs", "**/*.ts"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
     rules: {
+      "no-console": 0,
       "@typescript-eslint/ban-ts-comment": [
         "error",
         {
