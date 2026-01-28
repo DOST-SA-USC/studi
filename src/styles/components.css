@@ -10,7 +10,7 @@
   @apply mx-auto xl:!max-w-[1740px] px-4;
 }
 .hero-bg {
-  @apply absolute top-0 left-0 w-full -z-10;
+  @apply hidden;
 }
 .doc-bg {
   @apply h-screen bg-no-repeat absolute top-0 left-0 w-full -z-10;
@@ -21,7 +21,7 @@
 }
 
 .primary-text {
-  @apply text-[#2176ff] block;
+  @apply text-lightmode-primary dark:text-primary block;
 }
 
 .section-title {

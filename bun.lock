@@ -7,6 +7,7 @@
       "dependencies": {
         "@astrojs/starlight": "^0.36.2",
         "@astrojs/starlight-tailwind": "^4.0.2",
+        "@fontsource/poppins": "^5.2.7",
         "@tailwindcss/vite": "^4.1.16",
         "astro": "^5.15.3",
         "astro-embed": "^0.9.1",
@@ -207,6 +208,8 @@
     "@expressive-code/plugin-shiki": ["@expressive-code/plugin-shiki@0.41.3", "", { "dependencies": { "@expressive-code/core": "^0.41.3", "shiki": "^3.2.2" } }, "sha512-RlTARoopzhFJIOVHLGvuXJ8DCEme/hjV+ZnRJBIxzxsKVpGPW4Oshqg9xGhWTYdHstTsxO663s0cdBLzZj9TQA=="],
 
     "@expressive-code/plugin-text-markers": ["@expressive-code/plugin-text-markers@0.41.3", "", { "dependencies": { "@expressive-code/core": "^0.41.3" } }, "sha512-SN8tkIzDpA0HLAscEYD2IVrfLiid6qEdE9QLlGVSxO1KEw7qYvjpbNBQjUjMr5/jvTJ7ys6zysU2vLPHE0sb2g=="],
+
+    "@fontsource/poppins": ["@fontsource/poppins@5.2.7", "", {}, "sha512-6uQyPmseo4FgI97WIhA4yWRlNaoLk4vSDK/PyRwdqqZb5zAEuc+Kunt8JTMcsHYUEGYBtN15SNkMajMdqUSUmg=="],
 
     "@humanfs/core": ["@humanfs/core@0.19.1", "", {}, "sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA=="],
 

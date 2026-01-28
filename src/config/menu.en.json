@@ -5,8 +5,8 @@
       "url": "/"
     },
     {
-      "name": "Documentation",
-      "url": "/getting-started/introduction/overview/"
+      "name": "How to contribute",
+      "url": "/"
     },
     {
       "name": "Notes",
@@ -21,34 +21,9 @@
     }
   ],
   "footer": {
-    "community": {
-      "title": "Join Our Community",
+    "information": {
+      "title": "Additional Information",
       "links": [
-        {
-          "name": "GitHub Discussions",
-          "url": "https://github.com/themefisher/dockit/discussions"
-        },
-        {
-          "name": "Discord Community",
-          "url": "/"
-        },
-        {
-          "name": "Twitter Updates",
-          "url": "/"
-        },
-        {
-          "name": "Contributing Guide",
-          "url": "/"
-        }
-      ]
-    },
-    "help_links": {
-      "title": "Helpful Links",
-      "links": [
-        {
-          "name": "Getting Started",
-          "url": "/"
-        },
         {
           "name": "Privacy Policy",
           "url": "/privacy-policy"
@@ -62,33 +37,34 @@
           "url": "/about"
         },
         {
-          "name": "Troubleshooting",
+          "name": "Contacts",
+          "url": "/"
+        }
+      ]
+    },
+    "quick_links": {
+      "title": "Quick Links",
+      "links": [
+        {
+          "name": "FAQs",
+          "url": "/"
+        },
+        {
+          "name": "How to Contribute",
           "url": "/"
         }
       ]
     },
     "company": {
-      "title": "Resources",
+      "title": "More of us",
       "links": [
         {
-          "name": "Documentation Hub",
-          "url": "/docs/"
+          "name": "DSU Website",
+          "url": "https://dostsausc.org"
         },
         {
-          "name": "Theme Gallery",
-          "url": "/"
-        },
-        {
-          "name": "Best Practices",
-          "url": "/"
-        },
-        {
-          "name": "Performance Tips",
-          "url": "/"
-        },
-        {
-          "name": "Migration Guide",
-          "url": "/"
+          "name": "Verify",
+          "url": "https://verify.dostsausc.org/"
         }
       ]
     }
