@@ -18,75 +18,57 @@ export async function getDriveClient() {
   return google.drive({ version: "v3", auth });
 }
 
-const drive = await getDriveClient();
-async function retrieveAllFiles(
-  folder,
-  path = "",
-  allFiles = [],
-  seen = new Set(),
-) {
-  // side edge for folder shortcuts, removes function from stack immediately
-  if (seen.has(folder)) {
-    return allFiles;
-  }
+async function retrieveFile(folderId, currentPath = "") {
+  const drive = await getDriveClient();
+  const res = await drive.files.list({
+    q: `'${folderId}' in parents and trashed = false`,
+    fields: "files(id, name, mimeType, shortcutDetails)",
+  });
+  const files = res.data.files || [];
 
-  seen.add(folder);
-  const files = await retrieveFile(drive, folder);
+  let allFiles = [];
 
   for (const file of files) {
-    const itemSlug = slugify(file.name);
-    const fullSlug = path ? `${path}/${itemSlug}` : itemSlug;
+    const itemSlug = slugify(file.name, { lower: true, strict: true });
+    const fullSlug = currentPath ? `${currentPath}/${itemSlug}` : itemSlug;
 
-    // SHORTCUT
+    const baseData = {
+      id: file.id,
+      name: file.name,
+      fullSlug: fullSlug,
+      parentPath: currentPath,
+    };
+
+    // 1. SHORTCUT
     if (file.mimeType === SHORTCUT_MIMETYPE) {
-      const targetId = file.shortcutDetails?.targetId;
-      const targetType = file.shortcutDetails?.targetMimeType;
-
       allFiles.push({
-        id: file.id,
-        targetId: targetId,
-        name: file.name,
+        ...baseData,
         type: "shortcut",
-        targetType: targetType === FOLDER_MIMETYPE ? "folder" : "file",
-        path: path,
-        fullSlug: fullSlug,
+        targetId: file.shortcutDetails?.targetId,
+        targetType:
+          file.shortcutDetails?.targetMimeType === FOLDER_MIMETYPE
+            ? "folder"
+            : "file",
       });
     }
-
-    // 2. TYPE: FOLDER
+    // 2. FOLDER
     else if (file.mimeType === FOLDER_MIMETYPE) {
       allFiles.push({
-        id: file.id,
-        name: file.name,
+        ...baseData,
         type: "folder",
-        path: path,
-        fullSlug: fullSlug,
       });
-      await retrieveAllFiles(file.id, fullSlug, allFiles, seen);
     }
-
-    // 3. TYPE: FILE
+    // 3. FILE
     else {
       allFiles.push({
-        ...file,
+        ...baseData,
         type: "file",
-        path: path,
-        fullSlug: fullSlug,
+        mimeType: file.mimeType,
       });
     }
   }
-
   console.log(allFiles);
   return allFiles;
 }
 
-async function retrieveFile(drive, folderId) {
-  const res = await drive.files.list({
-    q: `'${folderId}' in parents and trashed = false`,
-    fields: "files(id, name, mimeType)",
-  });
-
-  return res.data.files || [];
-}
-
-await retrieveAllFiles("1bIegmdZL-T-tJfp1zl-eEwf3iimxopPg");
+await retrieveFile("1bIegmdZL-T-tJfp1zl-eEwf3iimxopPg");
