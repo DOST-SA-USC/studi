@@ -11,6 +11,14 @@ const tokenCache = new LRUCache({
 export async function GET({ params, request }) {
     const ip = request.headers.get('x-forwarded-for') || 'anonymous';
     const tokenCount = (tokenCache.get(ip) as number) || 0;
+    const apiKey = request.headers.get('api-key');
+
+    if (apiKey !== import.meta.env.API_KEY) {
+        return new Response(JSON.stringify({ error: "Unauthorized access" }), { 
+            status: 401,
+            headers: { "Content-Type": "application/json" }
+        });
+    }
   
     if (tokenCount >= 10) {
         return new Response(JSON.stringify({ error: "Too many requests. Chill muna!" }), {
