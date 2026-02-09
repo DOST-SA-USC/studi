@@ -11,6 +11,8 @@ import sidebar from "./src/config/sidebar.json";
 
 import { fileURLToPath } from "url";
 
+import node from "@astrojs/node";
+
 const { site } = config;
 const { title, logo, logo_darkmode } = site;
 
@@ -18,9 +20,11 @@ export const locales = locals;
 
 // https://astro.build/config
 export default defineConfig({
+  output: "server",
   image: {
     service: { entrypoint: "astro/assets/services/noop" },
   },
+
   integrations: [
     starlight({
       title,
@@ -48,6 +52,7 @@ export default defineConfig({
       },
     }),
   ],
+
   vite: {
     plugins: [tailwindcss(), viewTransitions()],
     resolve: {
@@ -57,4 +62,8 @@ export default defineConfig({
       },
     },
   },
+
+  adapter: node({
+    mode: "standalone",
+  }),
 });
