@@ -1,6 +1,6 @@
 export const prerender = false;
 
-import { retrieveFile } from '../../../index.js'; 
+import { retrieveFile } from '../../lib/utils/googleDrive.js';
 import { LRUCache } from 'lru-cache';
 
 const tokenCache = new LRUCache({
