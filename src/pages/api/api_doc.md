@@ -20,9 +20,9 @@ This endpoint dynamically retrieves the contents of a specified Google Drive fol
 
 To prevent unauthorized access, all requests must include the following header:
 
-| Header    | Value                                         |
-| :-------- | :-------------------------------------------- |
-| `api-key` | `API_KEY` (Check your messenger or call eman) |
+| Header      | Value                                       |
+| :---------- | :------------------------------------------ |
+| `x-api-key` | `API_KEY` (Check gc messenger or call eman) |
 
 ---
 
