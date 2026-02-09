@@ -14,6 +14,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@astrojs/node": "^9.5.2",
     "@astrojs/starlight": "^0.36.2",
     "@astrojs/starlight-tailwind": "^4.0.2",
     "@fontsource/poppins": "^5.2.7",
@@ -24,6 +25,7 @@
     "astro-font": "^1.1.0",
     "dotenv": "^17.2.3",
     "googleapis": "^105.0.0",
+    "lru-cache": "^11.2.5",
     "marked": "^16.4.1",
     "sharp": "^0.34.4",
     "slugify": "^1.6.6",
@@ -31,6 +33,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^20.0.0",
+    "@types/bun": "latest",
     "astro-vtbot": "^2.1.9",
     "commitlint": "^20.1.0",
     "eslint": "^9.39.1",
@@ -43,8 +46,7 @@
     "prettier-plugin-astro": "^0.14.0",
     "tailwindcss": "^4.1.16",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.47.0",
-    "@types/bun": "latest"
+    "typescript-eslint": "^8.47.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs}": [
