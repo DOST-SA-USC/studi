@@ -1,0 +1,50 @@
+---
+const { url, name } = Astro.props;
+---
+
+<a href={url} class="folder-card">
+  <div class="folder-icon-wrapper">
+    <img
+      src="src/assets/directory-icons/primary-folder.svg"
+      class="folder-icon"
+    />
+  </div>
+
+  <div class="folder-content">
+    <span class="folder-name">
+      {name}
+    </span>
+  </div>
+</a>
+
+<style>
+  .folder-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+
+    width: 140px;
+    height: 150px;
+    padding: 1rem;
+
+    text-decoration: none;
+  }
+
+  .folder-icon {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+  }
+
+  .folder-content {
+    text-align: center;
+  }
+
+  .folder-name {
+    font-size: 0.8rem;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+</style>

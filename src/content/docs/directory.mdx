@@ -1,0 +1,22 @@
+---
+title: Directory
+description: This is where the notes directory is located
+template: splash
+---
+
+import Section from "~/components/Section.astro";
+import Grid from "~/components/directory-components/FolderGrid.astro";
+import Folder from "~/components/directory-components/Folder.astro";
+import Container from "~/components/directory-components/FolderContainer.astro";
+
+import folders from "src/components/directory-components/Folders.json"
+
+
+  <Container>
+    <Grid columns={10}>
+    {folders.map((folder) => (
+        <Folder url={folder.url} name={folder.name} id={folder.id} modifiedTime={folder.modifiedTime}></Folder> 
+    ))}
+    </Grid>
+  </Container>
+

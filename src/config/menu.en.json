@@ -5,29 +5,29 @@
       "url": "/"
     },
     {
-      "name": "Contribute",
-      "url": "/contribute"
-    },
-    {
       "name": "Documentation",
       "url": "/getting-started/introduction/overview/"
     },
     {
-      "name": "FAQs",
-      "url": "/"
+      "name": "Notes",
+      "url": "/directory"
     },
     {
       "name": "Contact",
       "url": "/"
     },
     {
-      "name": "Notes",
+      "name": "FAQs",
       "url": "",
       "hasChildren": true,
       "children": [
         {
-          "name": "Temp",
-          "url": "/temp/temp"
+          "name": "temp",
+          "url": "/contribute/temp"
+        },
+        {
+          "name": "contribute",
+          "url": "/contribute/contribute"
         }
       ]
     }
