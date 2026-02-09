@@ -18,7 +18,7 @@ export async function getDriveClient() {
   return google.drive({ version: "v3", auth });
 }
 
-async function retrieveFile(folderId, currentPath = "") {
+export async function retrieveFile(folderId, currentPath = "") {
   const drive = await getDriveClient();
   const res = await drive.files.list({
     q: `'${folderId}' in parents and trashed = false`,
@@ -29,8 +29,16 @@ async function retrieveFile(folderId, currentPath = "") {
   let allFiles = [];
 
   for (const file of files) {
+    // EXPECTED SLUG: /[NAME]--[FOLDER_ID]/[NAME]--[FOLDER_ID]...
     const itemSlug = slugify(file.name, { lower: true, strict: true });
-    const fullSlug = currentPath ? `${currentPath}/${itemSlug}` : itemSlug;
+    const targetId =
+      file.mimeType === SHORTCUT_MIMETYPE
+        ? file.shortcutDetails?.targetId
+        : file.id;
+
+    const fullSlug = currentPath
+      ? `${currentPath}/${itemSlug}--${targetId}`
+      : `${itemSlug}--${targetId}`;
 
     const baseData = {
       id: file.id,
@@ -70,5 +78,3 @@ async function retrieveFile(folderId, currentPath = "") {
   console.log(allFiles);
   return allFiles;
 }
-
-await retrieveFile("1bIegmdZL-T-tJfp1zl-eEwf3iimxopPg");
