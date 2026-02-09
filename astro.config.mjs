@@ -11,7 +11,7 @@ import sidebar from "./src/config/sidebar.json";
 
 import { fileURLToPath } from "url";
 
-import node from "@astrojs/node";
+import vercel from "@astrojs/vercel/serverless";
 
 const { site } = config;
 const { title, logo, logo_darkmode } = site;
@@ -63,7 +63,5 @@ export default defineConfig({
     },
   },
 
-  adapter: node({
-    mode: "standalone",
-  }),
+  adapter: vercel(),
 });
