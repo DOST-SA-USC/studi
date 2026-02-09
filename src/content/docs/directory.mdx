@@ -11,12 +11,13 @@ import Container from "~/components/directory-components/FolderContainer.astro";
 
 import folders from "src/components/directory-components/Folders.json"
 
+{/* <Container>
 
-  <Container>
-    <Grid columns={10}>
-    {folders.map((folder) => (
-        <Folder url={folder.url} name={folder.name} id={folder.id} modifiedTime={folder.modifiedTime}></Folder> 
-    ))}
-    </Grid>
-  </Container>
+</Container> */}
+
+<Grid columns={10}>
+{folders.map((folder) => (
+    <Folder url={folder.url} name={folder.name} id={folder.id} modifiedTime={folder.modifiedTime}></Folder> 
+))}
+</Grid>
 

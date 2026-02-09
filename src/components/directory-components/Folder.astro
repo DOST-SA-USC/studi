@@ -11,9 +11,9 @@ const { url, name } = Astro.props;
   </div>
 
   <div class="folder-content">
-    <span class="folder-name">
+    <div class="folder-name">
       {name}
-    </span>
+    </div>
   </div>
 </a>
 
@@ -43,6 +43,7 @@ const { url, name } = Astro.props;
   }
 
   .folder-name {
+    display: block;
     font-size: 0.8rem;
     line-height: 1.2;
     font-weight: 500;
