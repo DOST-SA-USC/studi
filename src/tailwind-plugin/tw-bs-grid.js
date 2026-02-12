@@ -1,6 +1,6 @@
 import plugin from "tailwindcss/plugin";
 
-// eslint-disable-next-line no-undef
+ 
 module.exports = plugin.withOptions(() => {
   return ({ addComponents }) => {
     const gridColumns = 12;

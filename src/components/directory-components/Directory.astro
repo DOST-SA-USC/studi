@@ -11,7 +11,10 @@ import NavbarTab from "src/components/directory-components/NavbarTab.astro";
     id="navbar-target"
     class="navbar-container bg-lightmode-body dark:bg-body"
   >
-    <button id="toggle-sidebar-btn" class="sidebar-toggle"> ☰ </button>
+    <button id="toggle-sidebar-btn" class="sidebar-toggle">
+      <!-- temporary icon, will be replaced -->
+      ☰
+    </button>
     {
       initialFolders.map((item: any) => {
         return <NavbarTab title={item.name} />;
@@ -62,16 +65,15 @@ import NavbarTab from "src/components/directory-components/NavbarTab.astro";
   });
 
   // ==== FETCHING LOGIC ====
+  // const sidebarTarget = document.getElementById('sidebar-target');
+  // const navbarTarget = document.getElementById('navbar-target');
+  // const gridTarget = document.getElementById('grid-target');
 
-  const sidebarTarget = document.getElementById("sidebar-target");
-  const navbarTarget = document.getElementById("navbar-target");
-  const gridTarget = document.getElementById("grid-target");
-
-  const ROOT_ID = "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y";
-  const API_KEY = import.meta.env.API_KEY;
-  const response = await fetch(`https://studi.dostsausc.org/api/${ROOT_ID}`, {
-    headers: { Authorization: `Bearer ${API_KEY}` },
-  });
+  // const ROOT_ID = "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y";
+  // const API_KEY = import.meta.env.API_KEY;
+  // const response = await fetch(`https://studi.dostsausc.org/api/${ROOT_ID}`, {
+  //     headers: { 'Authorization': `Bearer ${API_KEY}` }
+  // });
 </script>
 
 <style>
@@ -109,7 +111,7 @@ import NavbarTab from "src/components/directory-components/NavbarTab.astro";
   @layer starlight.components {
     .card-grid {
       display: grid;
-      grid-template-columns: 1fr; /* Default: Single column */
+      grid-template-columns: 1fr;
     }
 
     .card-grid > :global(*) {
@@ -166,12 +168,10 @@ import NavbarTab from "src/components/directory-components/NavbarTab.astro";
       border-right: 1px solid var(--sl-color-gray-5);
     }
 
-    /* 4. THE ACTIVE STATE: Slide to position 0 */
     .sidebar-column.active {
       transform: translateX(0);
     }
 
-    /* Show the toggle button on mobile */
     .sidebar-toggle {
       display: block;
     }

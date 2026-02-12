@@ -82,7 +82,7 @@ const colorsMap = {};
   });
 });
 
-// eslint-disable-next-line no-undef
+ 
 module.exports = plugin.withOptions(() => {
   return function ({ addBase, addUtilities, matchUtilities }) {
     // Default vars on :root; dark vars on .dark
