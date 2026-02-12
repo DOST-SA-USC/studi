@@ -1,0 +1,46 @@
+---
+const { id, title } = Astro.props;
+---
+
+<a href="#" data-id={id} class="navbar-tab">
+  <div class="navbar-tab-title">
+    {title}
+  </div>
+</a>
+
+<style>
+  .navbar-tab {
+    min-width: fit-content;
+    display: block;
+    padding: 1rem;
+    text-decoration: none;
+
+    overflow: hidden;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .navbar-tab-title {
+    font-size: 0.8rem;
+    line-height: 1.2;
+    font-weight: 500;
+    color: var(--sl-color-gray-2);
+
+    /* OVERFLOW FIX: Add ellipsis (...) for long text */
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    /* Smooth color transition */
+    transition: color 0.2s ease;
+  }
+
+  .navbar-tab:hover .tab-title {
+    color: #6673bc;
+  }
+
+  .navbar-tab:hover {
+    background-color: rgba(102, 115, 188, 0.1);
+    border-bottom: 3px solid #6673bc;
+    padding-bottom: calc(1rem - 3px);
+  }
+</style>

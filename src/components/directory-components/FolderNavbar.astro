@@ -1,0 +1,30 @@
+---
+
+---
+
+<div class="navbar-container"><slot /></div>
+
+<style>
+  .navbar-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    max-height: fit-content;
+    min-width: 100vw;
+    overflow: auto;
+    border-bottom: 1px solid var(--sl-color-gray-6);
+  }
+
+  .navbar-tab {
+    padding: 1rem;
+    border-bottom: 3px solid var(--sl-color-hairline-light);
+  }
+
+  .tab-title {
+    display: block;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    font-weight: 500;
+    color: var(--sl-color-gray-2);
+  }
+</style>

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "1mayaYJNoswbA4wfXz5pVAhePsE9gv_Rw",
+    "name": "BS Electronics Engineering",
+    "fullSlug": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y/bs-electronics-engineering--1mayaYJNoswbA4wfXz5pVAhePsE9gv_Rw",
+    "parentPath": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y",
+    "type": "folder"
+  },
+  {
+    "id": "1rwBra_JaiZToLqUp0Si11uwgaOUYrNII",
+    "name": "BS Electrical Engineering",
+    "fullSlug": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y/bs-electrical-engineering--1rwBra_JaiZToLqUp0Si11uwgaOUYrNII",
+    "parentPath": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y",
+    "type": "folder"
+  },
+  {
+    "id": "1IHigI1Wn96HR634rclRBOmW44PTa8Jjs",
+    "name": "BS Computer Engineering",
+    "fullSlug": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y/bs-computer-engineering--1IHigI1Wn96HR634rclRBOmW44PTa8Jjs",
+    "parentPath": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y",
+    "type": "folder"
+  },
+  {
+    "id": "1mMP_-lNyeshAxxnPEtZkbwQ_lrOCOaRC",
+    "name": "BS Information Technology",
+    "fullSlug": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y/bs-information-technology--1mMP_-lNyeshAxxnPEtZkbwQ_lrOCOaRC",
+    "parentPath": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y",
+    "type": "folder"
+  },
+  {
+    "id": "1m-hRMAK-KAd6-Rib8vbHTJMvQInlKGAb",
+    "name": "BS Computer Science",
+    "fullSlug": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y/bs-computer-science--1m-hRMAK-KAd6-Rib8vbHTJMvQInlKGAb",
+    "parentPath": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y",
+    "type": "folder"
+  },
+  {
+    "id": "1NDPXzIgdLCIT1GW3nToCCmpZeGd0wzqM",
+    "name": "test.pdf",
+    "fullSlug": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y/bs-applied-physics--1NDPXzIgdLCIT1GW3nToCCmpZeGd0wzqM",
+    "parentPath": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y",
+    "type": "file"
+  },
+  {
+    "id": "1NDPXzIgdLCIT1GW3nToCCmpZeGd0wzqM",
+    "name": "test2.png",
+    "fullSlug": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y/bs-applied-physics--1NDPXzIgdLCIT1GW3nToCCmpZeGd0wzqM",
+    "parentPath": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y",
+    "type": "file"
+  },
+  {
+    "id": "1NDPXzIgdLCIT1GW3nToCCmpZeGd0wzqM",
+    "name": "test3.mdx",
+    "fullSlug": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y/bs-applied-physics--1NDPXzIgdLCIT1GW3nToCCmpZeGd0wzqM",
+    "parentPath": "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y",
+    "type": "file"
+  }
+]

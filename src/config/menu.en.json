@@ -5,16 +5,12 @@
       "url": "/"
     },
     {
-      "name": "Contribute",
-      "url": "/contribute"
-    },
-    {
-      "name": "Documentation",
-      "url": "/getting-started/introduction/overview/"
-    },
-    {
       "name": "FAQs",
-      "url": "/"
+      "url": "/contribute/contribute"
+    },
+    {
+      "name": "Notes",
+      "url": "/directory"
     },
     {
       "name": "Contact",
