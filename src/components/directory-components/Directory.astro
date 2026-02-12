@@ -1,25 +1,24 @@
 ---
-import Folder from "src/components/directory-components/Folder.astro";
 import initialFolders from "src/components/directory-components/Folders.json";
-import SidebarTab from "src/components/directory-components/SidebarTab.astro";
-import NavbarTab from "src/components/directory-components/NavbarTab.astro";
 ---
 
 <div class="directory-container">
   <!-- NAVBAR -->
-  <div
-    id="navbar-target"
-    class="navbar-container bg-lightmode-body dark:bg-body"
-  >
-    <button id="toggle-sidebar-btn" class="sidebar-toggle">
+  <div class="navbar-container">
+    <a id="toggle-sidebar-btn" class="sidebar-toggle">
       <!-- temporary icon, will be replaced -->
       ☰
-    </button>
-    {
-      initialFolders.map((item: any) => {
-        return <NavbarTab title={item.name} />;
-      })
-    }
+    </a>
+    <div
+      id="navbar-target"
+      class="navbar-container bg-lightmode-body dark:bg-body"
+    >
+      <!-- {
+        initialFolders.map((item: any) => {
+          return <NavbarTab title={item.name} />;
+        })
+      } -->
+    </div>
   </div>
   <div class="subfolder-content">
     <div>
@@ -30,11 +29,11 @@ import NavbarTab from "src/components/directory-components/NavbarTab.astro";
             <span class="sidebar-title"> Programs </span>
           </div>
           <div id="sidebar-target" class="sidebar-content">
-            {
+            <!-- {
               initialFolders.map((item: any) => {
                 return <SidebarTab title={item.name} />;
               })
-            }
+            } -->
           </div>
         </div>
       </div>
@@ -45,17 +44,17 @@ import NavbarTab from "src/components/directory-components/NavbarTab.astro";
       </div>
       <!-- GRID -->
       <div id="grid-target" class="card-grid" style={`--columns: 1`}>
-        {
+        <!-- {
           initialFolders.map((item: any) => {
-            return <Folder id={item.id} title={item.name} type={item.type} />;
+            return <Item id={item.id} title={item.name} type={item.type} />;
           })
-        }
+        } -->
       </div>
     </div>
   </div>
 </div>
 
-<script>
+<script define:vars={{ initialFolders }}>
   // ==== SIDEBAR TOGGLE LOGIC ====
   const btn = document.getElementById("toggle-sidebar-btn");
   const sidebar = document.querySelector(".sidebar-column");
@@ -65,18 +64,155 @@ import NavbarTab from "src/components/directory-components/NavbarTab.astro";
   });
 
   // ==== FETCHING LOGIC ====
-  // const sidebarTarget = document.getElementById('sidebar-target');
-  // const navbarTarget = document.getElementById('navbar-target');
-  // const gridTarget = document.getElementById('grid-target');
 
   // const ROOT_ID = "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y";
   // const API_KEY = import.meta.env.API_KEY;
   // const response = await fetch(`https://studi.dostsausc.org/api/${ROOT_ID}`, {
   //     headers: { 'Authorization': `Bearer ${API_KEY}` }
   // });
+
+  // ==== NAVIGATION LOGIC ====
+  const navbarTarget = document.getElementById("navbar-target");
+  const sidebarTarget = document.getElementById("sidebar-target");
+  const gridTarget = document.getElementById("grid-target");
+
+  const allData = initialFolders;
+  const BASE_URL = "/directory";
+
+  // === RENDERING FUNCTIONS ====
+
+  function renderNavbar(activeId) {
+    navbarTarget.innerHTML = allData
+      .map(
+        (item) => `
+      <a href="${BASE_URL}/${item.id}" data-id=${item.id} class="navbar-tab nav-item ${item.id === activeId ? "active" : ""}">
+        <div class="navbar-tab-title">
+          ${item.name}
+        </div>
+      </a>
+    `,
+      )
+      .join("");
+  }
+
+  function renderSidebar(pathArray) {
+    if (!pathArray || pathArray.length === 0) return;
+
+    const programId = pathArray[0];
+    const programData = allData.find((item) => item.id === programId);
+
+    if (!programData) return;
+
+    const level2Items = programData.courses || programData.items || [];
+
+    sidebarTarget.innerHTML = level2Items
+      .map((item) => {
+        const link = `${BASE_URL}/${programId}/${item.id}`;
+
+        const activeId = pathArray[1];
+
+        return `
+      <a href="${link}" 
+         class="sidebar-tab nav-item ${item.id === activeId ? "active" : ""}" 
+         data-id="${item.id}">
+        <div class="sidebar-tab-title">
+          ${item.name}
+        </div>
+      </a>
+    `;
+      })
+      .join("");
+  }
+
+  function getCurrentData(pathArray) {
+    let currentChildren = allData;
+    let currentFolder = null;
+
+    for (const id of pathArray) {
+      const found = currentChildren.find((item) => item.id === id);
+      if (!found) return null;
+      currentFolder = found;
+      currentChildren = found.courses || found.items || found.notes || [];
+    }
+    return { currentChildren, currentFolder };
+  }
+
+  function renderGrid(pathArray) {
+    if (!pathArray || pathArray.length === 0) {
+      return;
+    }
+
+    const data = getCurrentData(pathArray);
+
+    if (!data) {
+      gridTarget.innerHTML = "Folder not found";
+      return;
+    }
+
+    const itemsToShow = data.currentChildren;
+
+    gridTarget.innerHTML = itemsToShow
+      .map((item) => {
+        const link = `${BASE_URL}/${pathArray.join("/")}/${item.id}`;
+
+        const icons = {
+          folder: "/directory-icons/primary-folder.svg",
+          file: "/directory-icons/primary-file.svg",
+          default: "/directory-icons/primary-unknown.svg",
+        };
+
+        const itemType = item.type || "folder";
+        const iconSrc = icons[itemType] || icons.default;
+
+        return `
+        <a href="${link}" id="${item.id}" class="Item-card nav-item" data-type="${itemType}">
+          <img src="${iconSrc}" class="Item-icon" alt="${itemType}" />
+
+          <span class="Item-name">
+            ${item.name}
+          </span>
+        </a>
+      `;
+      })
+      .join("");
+  }
+
+  // ==== HELPER FUNCTIONS ====
+
+  function handleRoute() {
+    const cleanPath = window.location.pathname.replace(BASE_URL, "");
+    const pathArray = cleanPath.split("/").filter((p) => p);
+
+    renderNavbar(pathArray[0]);
+    renderSidebar(pathArray);
+    renderGrid(pathArray);
+    renderBreadcrumbs(pathArray);
+  }
+
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest("a");
+    if (!link) return;
+
+    if (link.classList.contains("nav-item")) {
+      e.preventDefault();
+
+      const href = link.getAttribute("href");
+      const type = link.getAttribute("data-type");
+
+      if (type === "file") {
+        alert("Opening file: " + link.innerText.trim());
+        return;
+      }
+
+      history.pushState(null, "", href);
+      handleRoute();
+    }
+  });
+
+  handleRoute();
 </script>
 
-<style>
+<style is:global>
   .directory-container {
   }
 
@@ -129,10 +265,50 @@ import NavbarTab from "src/components/directory-components/NavbarTab.astro";
     border-bottom: 1px solid var(--sl-color-gray-5);
   }
 
+  .navbar-tab {
+    min-width: fit-content;
+    display: block;
+    padding: 1rem;
+    text-decoration: none;
+
+    overflow: hidden;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .navbar-tab-title {
+    font-size: 0.8rem;
+    line-height: 1.2;
+    font-weight: 500;
+    color: var(--sl-color-gray-2);
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    /* Smooth color transition */
+    transition: color 0.2s ease;
+  }
+
+  .navbar-tab:hover .tab-title {
+    color: #6673bc;
+  }
+
+  .navbar-tab:hover {
+    background-color: rgba(102, 115, 188, 0.1);
+    border-bottom: 3px solid #6673bc;
+    padding-bottom: calc(1rem - 3px);
+  }
+
+  .navbar-tab.active {
+    background-color: rgba(102, 115, 188, 0.1);
+    border-bottom: 3px solid #6673bc;
+    padding-bottom: calc(1rem - 3px);
+  }
+
   /* ==== SIDEBAR ==== */
 
   .sidebar-column {
-    /* width: 300px; */
+    width: 300px;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -158,6 +334,43 @@ import NavbarTab from "src/components/directory-components/NavbarTab.astro";
     margin-right: 10px;
     border-radius: 4px;
     display: none;
+    text-decoration: none;
+  }
+
+  .sidebar-toggle:hover {
+    background-color: rgba(102, 115, 188, 0.1);
+  }
+
+  .sidebar-tab {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    border-radius: 0.7rem;
+
+    padding: 0.75rem 1rem;
+    box-sizing: border-box;
+
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .sidebar-tab-title {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    font-weight: 500;
+
+    color: var(--sl-color-gray-2);
+
+    word-break: break-word;
+  }
+
+  .sidebar-tab:hover {
+    background-color: rgba(102, 115, 188, 0.1);
+  }
+
+  .sidebar-tab.active {
+    background-color: rgba(102, 115, 188, 0.1);
   }
 
   @media (max-width: 1150px) {
@@ -175,5 +388,39 @@ import NavbarTab from "src/components/directory-components/NavbarTab.astro";
     .sidebar-toggle {
       display: block;
     }
+  }
+
+  .Item-card {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    transition: all 0.2s ease;
+
+    gap: 0.9rem;
+    width: 100%;
+    padding: 1rem;
+
+    text-decoration: none;
+    border-top: 1px solid var(--sl-color-gray-5);
+  }
+
+  .Item-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+
+  .Item-content {
+    text-align: left;
+  }
+
+  .Item-name {
+    font-size: 0.8rem;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+
+  .Item-card:hover {
+    background-color: rgba(102, 115, 188, 0.05);
   }
 </style>

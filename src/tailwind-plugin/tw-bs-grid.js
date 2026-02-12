@@ -1,6 +1,5 @@
 import plugin from "tailwindcss/plugin";
 
- 
 module.exports = plugin.withOptions(() => {
   return ({ addComponents }) => {
     const gridColumns = 12;
