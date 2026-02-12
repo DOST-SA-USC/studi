@@ -39,18 +39,27 @@ export async function GET({ params, request }) {
     const folderId = segments[segments.length - 1];
 
     const currentUrl = fullPath;
-
+    type DriveError = { error: string; message?: string; code?: number };
+    
     try {
-        const data = await retrieveFile(folderId, currentUrl);
+        const data = await retrieveFile(folderId, currentUrl) as Record<string, unknown>[] | DriveError;  
+
+        if (data && !Array.isArray(data) && data.error) {
+            return new Response(JSON.stringify(data), { 
+                status: data.code || 400,
+                headers: { "Content-Type": "application/json" }
+            });
+        }
 
         return new Response(JSON.stringify(data), {
-        status: 200,
-        headers: {
-            'Content-Type': 'application/json'
-        }
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
         });
     } catch (error) {
         console.error("API Error:", error);
-        return new Response(JSON.stringify({ error: "Internal Server Error" }), { status: 500 });
+        return new Response(JSON.stringify({ 
+            error: "Internal Server Error",
+            message: "An unexpected error occurred while fetching data." 
+        }), { status: 500 });
     }
 }

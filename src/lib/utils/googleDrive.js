@@ -19,62 +19,85 @@ export async function getDriveClient() {
 }
 
 export async function retrieveFile(folderId, currentPath = "") {
-  const drive = await getDriveClient();
-  const res = await drive.files.list({
-    q: `'${folderId}' in parents and trashed = false`,
-    fields: "files(id, name, mimeType, shortcutDetails)",
-  });
-  const files = res.data.files || [];
+  try {
+    const drive = await getDriveClient();
+    const res = await drive.files.list({
+      q: `'${folderId}' in parents and trashed = false`,
+      fields: "files(id, name, mimeType, shortcutDetails)",
+    });
+    const files = res.data.files || [];
 
-  let allFiles = [];
+    let allFiles = [];
 
-  for (const file of files) {
-    // EXPECTED SLUG: /[NAME]--[FOLDER_ID]/[NAME]--[FOLDER_ID]...
-    const itemSlug = slugify(file.name, { lower: true, strict: true });
-    const targetId =
-      file.mimeType === SHORTCUT_MIMETYPE
-        ? file.shortcutDetails?.targetId
-        : file.id;
+    for (const file of files) {
+      // EXPECTED SLUG: /[NAME]--[FOLDER_ID]/[NAME]--[FOLDER_ID]...
+      const itemSlug = slugify(file.name, { lower: true, strict: true });
+      const targetId =
+        file.mimeType === SHORTCUT_MIMETYPE
+          ? file.shortcutDetails?.targetId
+          : file.id;
 
-    const fullSlug = currentPath
-      ? `${currentPath}/${itemSlug}--${targetId}`
-      : `${itemSlug}--${targetId}`;
+      const fullSlug = currentPath
+        ? `${currentPath}/${itemSlug}--${targetId}`
+        : `${itemSlug}--${targetId}`;
 
-    const baseData = {
-      id: file.id,
-      name: file.name,
-      fullSlug: fullSlug,
-      parentPath: currentPath,
-    };
+      const baseData = {
+        id: file.id,
+        name: file.name,
+        fullSlug: fullSlug,
+        parentPath: currentPath,
+      };
 
-    // 1. SHORTCUT
-    if (file.mimeType === SHORTCUT_MIMETYPE) {
-      allFiles.push({
-        ...baseData,
-        type: "shortcut",
-        targetId: file.shortcutDetails?.targetId,
-        targetType:
-          file.shortcutDetails?.targetMimeType === FOLDER_MIMETYPE
-            ? "folder"
-            : "file",
-      });
+      // 1. SHORTCUT
+      if (file.mimeType === SHORTCUT_MIMETYPE) {
+        allFiles.push({
+          ...baseData,
+          type: "shortcut",
+          targetId: file.shortcutDetails?.targetId,
+          targetType:
+            file.shortcutDetails?.targetMimeType === FOLDER_MIMETYPE
+              ? "folder"
+              : "file",
+        });
+      }
+      // 2. FOLDER
+      else if (file.mimeType === FOLDER_MIMETYPE) {
+        allFiles.push({
+          ...baseData,
+          type: "folder",
+        });
+      }
+      // 3. FILE
+      else {
+        allFiles.push({
+          ...baseData,
+          type: "file",
+          mimeType: file.mimeType,
+        });
+      }
     }
-    // 2. FOLDER
-    else if (file.mimeType === FOLDER_MIMETYPE) {
-      allFiles.push({
-        ...baseData,
-        type: "folder",
-      });
+    console.log(allFiles);
+    return allFiles;
+  } catch (error) {
+    console.error("Google Drive API Error:", error.message);
+
+    if (error.code === 404 || error.code === 400) {
+      return { 
+        error: "Folder not found", 
+        message: "The provided Folder ID is invalid or doesn't exist.",
+        code: 404 
+      };
     }
-    // 3. FILE
-    else {
-      allFiles.push({
-        ...baseData,
-        type: "file",
-        mimeType: file.mimeType,
-      });
+    
+    if (error.code === 403) {
+      return { 
+        error: "Access Denied", 
+        message: "The service account does not have permission to view this folder.",
+        code: 403 
+      };
     }
+
+    return { error: "Server Error", message: "Something went wrong with the Drive API.", code: 500 };
   }
-  console.log(allFiles);
-  return allFiles;
+  
 }
