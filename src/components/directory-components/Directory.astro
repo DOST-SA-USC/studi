@@ -6,8 +6,7 @@ import initialFolders from "src/components/directory-components/Folders.json";
   <!-- NAVBAR -->
   <div class="navbar-container">
     <a id="toggle-sidebar-btn" class="sidebar-toggle">
-      <!-- temporary icon, will be replaced -->
-      ☰
+      <img src="/directory-icons/primary-menu.svg" alt="MENU" />
     </a>
     <div
       id="navbar-target"
@@ -40,7 +39,19 @@ import initialFolders from "src/components/directory-components/Folders.json";
     </div>
     <div class="file-window bg-lightmode-dark dark:bg-dark">
       <div class="folder-header">
-        <span style="margin-left: 10px;">BREADCRUMBS HERE</span>
+        <a href="" id="undo-target" class="undo-button">
+          <img src="/directory-icons/primary-undo.svg" alt="" />
+        </a>
+        <div id="breadcrumbs-target" class="breadcrumb-container">
+          <!-- /
+          <a href="#" class="breadcrumb-link">
+            directory
+          </a>
+          /
+          <a href="#" class="breadcrumb-link">
+            bs-cs
+          </a> -->
+        </div>
       </div>
       <!-- GRID -->
       <div id="grid-target" class="card-grid" style={`--columns: 1`}>
@@ -75,17 +86,52 @@ import initialFolders from "src/components/directory-components/Folders.json";
   const navbarTarget = document.getElementById("navbar-target");
   const sidebarTarget = document.getElementById("sidebar-target");
   const gridTarget = document.getElementById("grid-target");
+  const undoTarget = document.getElementById("undo-target");
+  const breadcrumbsTarget = document.getElementById("breadcrumbs-target");
 
   const allData = initialFolders;
   const BASE_URL = "/directory";
 
   // === RENDERING FUNCTIONS ====
 
+  function renderBreadcrumbs(pathArray) {
+    let html = `
+      / 
+      <a href="${BASE_URL}" class="breadcrumb-link nav-item" data-type="folder">
+        directory
+      </a>
+    `;
+
+    let currentPathAccumulator = BASE_URL;
+    let currentLevelItems = allData;
+
+    for (const id of pathArray) {
+      const item = currentLevelItems.find((i) => i.id === id);
+
+      if (item) {
+        currentPathAccumulator += `/${id}`;
+
+        html += `
+          / 
+          <a href="${currentPathAccumulator}" 
+             class="breadcrumb-link nav-item" 
+             data-type="folder">
+            ${item.name}
+          </a>
+        `;
+
+        currentLevelItems = item.courses || item.items || item.notes || [];
+      }
+    }
+
+    breadcrumbsTarget.innerHTML = html;
+  }
+
   function renderNavbar(activeId) {
     navbarTarget.innerHTML = allData
       .map(
         (item) => `
-      <a href="${BASE_URL}/${item.id}" data-id=${item.id} class="navbar-tab nav-item ${item.id === activeId ? "active" : ""}">
+      <a href="${BASE_URL}/${item.id}" data-id=${item.id} class="navbar-tab nav-item ${item.id === activeId ? "active" : ""}" data-type="${item.type}">
         <div class="navbar-tab-title">
           ${item.name}
         </div>
@@ -96,7 +142,10 @@ import initialFolders from "src/components/directory-components/Folders.json";
   }
 
   function renderSidebar(pathArray) {
-    if (!pathArray || pathArray.length === 0) return;
+    if (!pathArray || pathArray.length === 0) {
+      sidebarTarget.innerHTML = "";
+      return;
+    }
 
     const programId = pathArray[0];
     const programData = allData.find((item) => item.id === programId);
@@ -114,7 +163,7 @@ import initialFolders from "src/components/directory-components/Folders.json";
         return `
       <a href="${link}" 
          class="sidebar-tab nav-item ${item.id === activeId ? "active" : ""}" 
-         data-id="${item.id}">
+         data-id="${item.id}" data-type="${item.type}">
         <div class="sidebar-tab-title">
           ${item.name}
         </div>
@@ -138,7 +187,8 @@ import initialFolders from "src/components/directory-components/Folders.json";
   }
 
   function renderGrid(pathArray) {
-    if (!pathArray || pathArray.length === 0) {
+    if (!pathArray || pathArray.length <= 1) {
+      gridTarget.innerHTML = "";
       return;
     }
 
@@ -161,7 +211,7 @@ import initialFolders from "src/components/directory-components/Folders.json";
           default: "/directory-icons/primary-unknown.svg",
         };
 
-        const itemType = item.type || "folder";
+        const itemType = item.type || "misc";
         const iconSrc = icons[itemType] || icons.default;
 
         return `
@@ -177,7 +227,7 @@ import initialFolders from "src/components/directory-components/Folders.json";
       .join("");
   }
 
-  // ==== HELPER FUNCTIONS ====
+  // ==== ROUTING FUNCTIONS ====
 
   function handleRoute() {
     const cleanPath = window.location.pathname.replace(BASE_URL, "");
@@ -199,7 +249,7 @@ import initialFolders from "src/components/directory-components/Folders.json";
       const href = link.getAttribute("href");
       const type = link.getAttribute("data-type");
 
-      if (type === "file") {
+      if (type !== "folder") {
         alert("Opening file: " + link.innerText.trim());
         return;
       }
@@ -209,15 +259,16 @@ import initialFolders from "src/components/directory-components/Folders.json";
     }
   });
 
+  undoTarget?.addEventListener("click", () => {
+    window.history.back();
+  });
+
   handleRoute();
 </script>
 
 <style is:global>
-  .directory-container {
-  }
-
   .subfolder-content {
-    border-radius: 5px;
+    border-radius: 6px;
     display: flex;
     position: relative;
     overflow: hidden;
@@ -229,17 +280,31 @@ import initialFolders from "src/components/directory-components/Folders.json";
     flex-grow: 1;
     margin: 0;
     overflow: hidden;
+    border-radius: 6px;
   }
 
   .folder-header {
     width: 100%;
-    padding: 10px;
+    padding: 1rem;
     font-weight: 600;
     font-size: 0.9rem;
 
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: flex-start;
+    gap: 1rem;
+  }
+
+  .breadcrumb-container {
+    border-radius: 6px;
+    flex-grow: 1;
+    min-height: 30px;
+    background-color: rgba(102, 115, 188, 0.1);
+    padding: 10px;
+  }
+
+  .breadcrumb-link {
+    text-decoration: none;
   }
 
   /* ==== GRID ==== */
