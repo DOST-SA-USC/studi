@@ -1,65 +1,63 @@
 export const prerender = false;
 
-import { retrieveFile } from '../../lib/utils/googleDrive.js';
-import { LRUCache } from 'lru-cache';
+import { retrieveFile } from "../../lib/utils/googleDrive.js";
+import { LRUCache } from "lru-cache";
 
 const tokenCache = new LRUCache({
-    max: 500,
-    ttl: 60 * 1000, 
+  max: 500,
+  ttl: 60 * 1000,
 });
 
 export async function GET({ params, request }) {
-    const ip = request.headers.get('x-forwarded-for') || 'anonymous';
-    const tokenCount = (tokenCache.get(ip) as number) || 0;
-    const apiKey = request.headers.get('x-api-key');
+  const ip = request.headers.get("x-forwarded-for") || "anonymous";
+  const tokenCount = (tokenCache.get(ip) as number) || 0;
+  const apiKey = request.headers.get("x-api-key");
 
-    if (apiKey !== import.meta.env.API_KEY) {
-        return new Response(JSON.stringify({ error: "Unauthorized access" }), { 
-            status: 401,
-            headers: { "Content-Type": "application/json" }
-        });
-    }
-  
-    if (tokenCount >= 10) {
-        return new Response(JSON.stringify({ error: "Too many requests. Chill muna!" }), {
-            status: 429, 
-            headers: { "Content-Type": "application/json" }
-        });
-    }
-    tokenCache.set(ip, tokenCount + 1);
-    // ---------------------------
+  if (apiKey !== import.meta.env.API_KEY) {
+    return new Response(JSON.stringify({ error: "Unauthorized access" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 
-    const fullPath = params.path;
+  if (tokenCount >= 10) {
+    return new Response(
+      JSON.stringify({ error: "Too many requests. Chill muna!" }),
+      {
+        status: 429,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
+  }
+  tokenCache.set(ip, tokenCount + 1);
+  // ---------------------------
 
-    if (!fullPath) {
-        return new Response(JSON.stringify({ error: "Path is required" }), { status: 400 });
-    }
+  const fullPath = params.path;
 
-    const segments = fullPath.split('--');
-    const folderId = segments[segments.length - 1];
+  if (!fullPath) {
+    return new Response(JSON.stringify({ error: "Path is required" }), {
+      status: 400,
+    });
+  }
 
-    const currentUrl = fullPath;
-    type DriveError = { error: string; message?: string; code?: number };
-    
-    try {
-        const data = await retrieveFile(folderId, currentUrl) as Record<string, unknown>[] | DriveError;  
+  const segments = fullPath.split("--");
+  const folderId = segments[segments.length - 1];
 
-        if (data && !Array.isArray(data) && data.error) {
-            return new Response(JSON.stringify(data), { 
-                status: data.code || 400,
-                headers: { "Content-Type": "application/json" }
-            });
-        }
+  const currentUrl = fullPath;
 
-        return new Response(JSON.stringify(data), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-        });
-    } catch (error) {
-        console.error("API Error:", error);
-        return new Response(JSON.stringify({ 
-            error: "Internal Server Error",
-            message: "An unexpected error occurred while fetching data." 
-        }), { status: 500 });
-    }
+  try {
+    const data = await retrieveFile(folderId, currentUrl);
+
+    return new Response(JSON.stringify(data), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error) {
+    console.error("API Error:", error);
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+      status: 500,
+    });
+  }
 }

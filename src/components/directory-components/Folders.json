@@ -1,0 +1,174 @@
+[
+  {
+    "id": "bs-cs",
+    "name": "BS Computer Science",
+    "type": "folder",
+    "courses": [
+      {
+        "id": "cis-2101",
+        "name": "Data Structures and Algorithms",
+        "type": "folder",
+        "notes": [
+          {
+            "id": "dsa-folder-1",
+            "name": "Emman's Notes",
+            "type": "folder",
+            "items": [
+              {
+                "id": "dsa-file-1",
+                "name": "05_Trees_and_Graphs.pdf",
+                "type": "pdf"
+              },
+              {
+                "id": "dsa-file-2",
+                "name": "06_HashTables.pdf",
+                "type": "mp3"
+              }
+            ]
+          },
+          {
+            "id": "dsa-folder-2",
+            "name": "Lecture Slides",
+            "type": "folder",
+            "items": [
+              {
+                "id": "dsa-slide-1",
+                "name": "Week1_Intro.pptx",
+                "type": "file"
+              },
+              {
+                "id": "dsa-slide-2",
+                "name": "Week2_Arrays.pptx",
+                "type": "file"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cis-1202",
+        "name": "Object-Oriented Programming",
+        "type": "folder",
+        "notes": [
+          {
+            "id": "oop-folder-1",
+            "name": "Lab Exercises",
+            "type": "folder",
+            "items": [
+              {
+                "id": "oop-lab-1",
+                "name": "Lab1_Classes.java",
+                "type": "file"
+              },
+              {
+                "id": "oop-lab-2",
+                "name": "Lab2_Inheritance.java",
+                "type": "file"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cis-3105",
+        "name": "Automata Theory",
+        "type": "folder",
+        "notes": [
+          {
+            "id": "auto-folder-1",
+            "name": "Reviewers",
+            "type": "folder",
+            "items": [
+              {
+                "id": "auto-rev-1",
+                "name": "Midterm_Reviewer.docx",
+                "type": "file"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bs-it",
+    "name": "BS Information Technology",
+    "type": "folder",
+    "courses": [
+      {
+        "id": "it-1101",
+        "name": "Web Systems and Technologies",
+        "type": "folder",
+        "notes": [
+          {
+            "id": "web-folder-1",
+            "name": "CSS Resources",
+            "type": "folder",
+            "items": [
+              {
+                "id": "web-file-1",
+                "name": "Flexbox_Cheatsheet.png",
+                "type": "file"
+              },
+              {
+                "id": "web-file-2",
+                "name": "Grid_Guide.pdf",
+                "type": "file"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "it-2204",
+        "name": "Networking 1",
+        "type": "folder",
+        "notes": [
+          {
+            "id": "net-folder-1",
+            "name": "Cisco Labs",
+            "type": "folder",
+            "items": [
+              {
+                "id": "net-file-1",
+                "name": "Lab_01_Basic_Switching.pkt",
+                "type": "file"
+              },
+              {
+                "id": "net-file-2",
+                "name": "Lab_02_VLANs.pkt",
+                "type": "file"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bs-is",
+    "name": "BS Information Systems",
+    "type": "folder",
+    "courses": [
+      {
+        "id": "is-101",
+        "name": "Business Process Management",
+        "type": "folder",
+        "notes": [
+          {
+            "id": "bpm-folder-1",
+            "name": "Case Studies",
+            "type": "folder",
+            "items": [
+              {
+                "id": "bpm-file-1",
+                "name": "Case_Study_Logistics.pdf",
+                "type": "file"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

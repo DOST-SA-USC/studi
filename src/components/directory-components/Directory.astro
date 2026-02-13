@@ -1,0 +1,491 @@
+---
+import initialFolders from "src/components/directory-components/Folders.json";
+---
+
+<div class="directory-container">
+  <!-- NAVBAR -->
+  <div class="navbar-container">
+    <a id="toggle-sidebar-btn" class="sidebar-toggle">
+      <img src="/directory-icons/primary-menu.svg" alt="MENU" />
+    </a>
+    <div
+      id="navbar-target"
+      class="navbar-container bg-lightmode-body dark:bg-body"
+    >
+      <!-- {
+        initialFolders.map((item: any) => {
+          return <NavbarTab title={item.name} />;
+        })
+      } -->
+    </div>
+  </div>
+  <div class="subfolder-content">
+    <div>
+      <!-- SIDEBAR -->
+      <div class="sidebar-column bg-lightmode-body dark:bg-body">
+        <div class="sidebar-scroll-wrapper">
+          <div class="sidebar-header">
+            <span class="sidebar-title"> Programs </span>
+          </div>
+          <div id="sidebar-target" class="sidebar-content">
+            <!-- {
+              initialFolders.map((item: any) => {
+                return <SidebarTab title={item.name} />;
+              })
+            } -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="file-window bg-lightmode-dark dark:bg-dark">
+      <div class="folder-header">
+        <a href="" id="undo-target" class="undo-button">
+          <img src="/directory-icons/primary-undo.svg" alt="" />
+        </a>
+        <div id="breadcrumbs-target" class="breadcrumb-container">
+          <!-- /
+          <a href="#" class="breadcrumb-link">
+            directory
+          </a>
+          /
+          <a href="#" class="breadcrumb-link">
+            bs-cs
+          </a> -->
+        </div>
+      </div>
+      <!-- GRID -->
+      <div id="grid-target" class="card-grid" style={`--columns: 1`}>
+        <!-- {
+          initialFolders.map((item: any) => {
+            return <Item id={item.id} title={item.name} type={item.type} />;
+          })
+        } -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ initialFolders }}>
+  // ==== SIDEBAR TOGGLE LOGIC ====
+  const btn = document.getElementById("toggle-sidebar-btn");
+  const sidebar = document.querySelector(".sidebar-column");
+
+  btn?.addEventListener("click", () => {
+    sidebar?.classList.toggle("active");
+  });
+
+  // ==== FETCHING LOGIC ====
+
+  // const ROOT_ID = "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y";
+  // const API_KEY = import.meta.env.API_KEY;
+  // const response = await fetch(`https://studi.dostsausc.org/api/${ROOT_ID}`, {
+  //     headers: { 'Authorization': `Bearer ${API_KEY}` }
+  // });
+
+  // ==== NAVIGATION LOGIC ====
+  const navbarTarget = document.getElementById("navbar-target");
+  const sidebarTarget = document.getElementById("sidebar-target");
+  const gridTarget = document.getElementById("grid-target");
+  const undoTarget = document.getElementById("undo-target");
+  const breadcrumbsTarget = document.getElementById("breadcrumbs-target");
+
+  const allData = initialFolders;
+  const BASE_URL = "/directory";
+
+  // === RENDERING FUNCTIONS ====
+
+  function renderBreadcrumbs(pathArray) {
+    let html = `
+      / 
+      <a href="${BASE_URL}" class="breadcrumb-link nav-item" data-type="folder">
+        directory
+      </a>
+    `;
+
+    let currentPathAccumulator = BASE_URL;
+    let currentLevelItems = allData;
+
+    for (const id of pathArray) {
+      const item = currentLevelItems.find((i) => i.id === id);
+
+      if (item) {
+        currentPathAccumulator += `/${id}`;
+
+        html += `
+          / 
+          <a href="${currentPathAccumulator}" 
+             class="breadcrumb-link nav-item" 
+             data-type="folder">
+            ${item.name}
+          </a>
+        `;
+
+        currentLevelItems = item.courses || item.items || item.notes || [];
+      }
+    }
+
+    breadcrumbsTarget.innerHTML = html;
+  }
+
+  function renderNavbar(activeId) {
+    navbarTarget.innerHTML = allData
+      .map(
+        (item) => `
+      <a href="${BASE_URL}/${item.id}" data-id=${item.id} class="navbar-tab nav-item ${item.id === activeId ? "active" : ""}" data-type="${item.type}">
+        <div class="navbar-tab-title">
+          ${item.name}
+        </div>
+      </a>
+    `,
+      )
+      .join("");
+  }
+
+  function renderSidebar(pathArray) {
+    if (!pathArray || pathArray.length === 0) {
+      sidebarTarget.innerHTML = "";
+      return;
+    }
+
+    const programId = pathArray[0];
+    const programData = allData.find((item) => item.id === programId);
+
+    if (!programData) return;
+
+    const level2Items = programData.courses || programData.items || [];
+
+    sidebarTarget.innerHTML = level2Items
+      .map((item) => {
+        const link = `${BASE_URL}/${programId}/${item.id}`;
+
+        const activeId = pathArray[1];
+
+        return `
+      <a href="${link}" 
+         class="sidebar-tab nav-item ${item.id === activeId ? "active" : ""}" 
+         data-id="${item.id}" data-type="${item.type}">
+        <div class="sidebar-tab-title">
+          ${item.name}
+        </div>
+      </a>
+    `;
+      })
+      .join("");
+  }
+
+  function getCurrentData(pathArray) {
+    let currentChildren = allData;
+    let currentFolder = null;
+
+    for (const id of pathArray) {
+      const found = currentChildren.find((item) => item.id === id);
+      if (!found) return null;
+      currentFolder = found;
+      currentChildren = found.courses || found.items || found.notes || [];
+    }
+    return { currentChildren, currentFolder };
+  }
+
+  function renderGrid(pathArray) {
+    if (!pathArray || pathArray.length <= 1) {
+      gridTarget.innerHTML = "";
+      return;
+    }
+
+    const data = getCurrentData(pathArray);
+
+    if (!data) {
+      gridTarget.innerHTML = "Folder not found";
+      return;
+    }
+
+    const itemsToShow = data.currentChildren;
+
+    gridTarget.innerHTML = itemsToShow
+      .map((item) => {
+        const link = `${BASE_URL}/${pathArray.join("/")}/${item.id}`;
+
+        const icons = {
+          folder: "/directory-icons/primary-folder.svg",
+          file: "/directory-icons/primary-file.svg",
+          default: "/directory-icons/primary-unknown.svg",
+        };
+
+        const itemType = item.type || "misc";
+        const iconSrc = icons[itemType] || icons.default;
+
+        return `
+        <a href="${link}" id="${item.id}" class="Item-card nav-item" data-type="${itemType}">
+          <img src="${iconSrc}" class="Item-icon" alt="${itemType}" />
+
+          <span class="Item-name">
+            ${item.name}
+          </span>
+        </a>
+      `;
+      })
+      .join("");
+  }
+
+  // ==== ROUTING FUNCTIONS ====
+
+  function handleRoute() {
+    const cleanPath = window.location.pathname.replace(BASE_URL, "");
+    const pathArray = cleanPath.split("/").filter((p) => p);
+
+    renderNavbar(pathArray[0]);
+    renderSidebar(pathArray);
+    renderGrid(pathArray);
+    renderBreadcrumbs(pathArray);
+  }
+
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest("a");
+    if (!link) return;
+
+    if (link.classList.contains("nav-item")) {
+      e.preventDefault();
+
+      const href = link.getAttribute("href");
+      const type = link.getAttribute("data-type");
+
+      if (type !== "folder") {
+        alert("Opening file: " + link.innerText.trim());
+        return;
+      }
+
+      history.pushState(null, "", href);
+      handleRoute();
+    }
+  });
+
+  undoTarget?.addEventListener("click", () => {
+    window.history.back();
+  });
+
+  handleRoute();
+</script>
+
+<style is:global>
+  .subfolder-content {
+    border-radius: 6px;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    min-height: 600px;
+  }
+
+  .file-window {
+    flex-grow: 1;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+
+  .folder-header {
+    width: 100%;
+    padding: 1rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+
+  .breadcrumb-container {
+    border-radius: 6px;
+    flex-grow: 1;
+    min-height: 30px;
+    background-color: rgba(102, 115, 188, 0.1);
+    padding: 10px;
+  }
+
+  .breadcrumb-link {
+    text-decoration: none;
+  }
+
+  /* ==== GRID ==== */
+
+  @layer starlight.components {
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .card-grid > :global(*) {
+      margin-top: 0 !important;
+    }
+  }
+
+  /* ==== NAVBAR ==== */
+
+  .navbar-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    max-height: fit-content;
+    border-bottom: 1px solid var(--sl-color-gray-5);
+  }
+
+  .navbar-tab {
+    min-width: fit-content;
+    display: block;
+    padding: 1rem;
+    text-decoration: none;
+
+    overflow: hidden;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .navbar-tab-title {
+    font-size: 0.8rem;
+    line-height: 1.2;
+    font-weight: 500;
+    color: var(--sl-color-gray-2);
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    /* Smooth color transition */
+    transition: color 0.2s ease;
+  }
+
+  .navbar-tab:hover .tab-title {
+    color: #6673bc;
+  }
+
+  .navbar-tab:hover {
+    background-color: rgba(102, 115, 188, 0.1);
+    border-bottom: 3px solid #6673bc;
+    padding-bottom: calc(1rem - 3px);
+  }
+
+  .navbar-tab.active {
+    background-color: rgba(102, 115, 188, 0.1);
+    border-bottom: 3px solid #6673bc;
+    padding-bottom: calc(1rem - 3px);
+  }
+
+  /* ==== SIDEBAR ==== */
+
+  .sidebar-column {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex-shrink: 0;
+  }
+
+  .sidebar-scroll-wrapper {
+    height: 100%;
+    overflow-y: auto;
+    padding: 1.5rem;
+  }
+
+  .sidebar-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--sl-color-hairline-light);
+    font-weight: 600;
+  }
+
+  .sidebar-toggle {
+    cursor: pointer;
+    padding: 4px 8px;
+    margin-right: 10px;
+    border-radius: 4px;
+    display: none;
+    text-decoration: none;
+  }
+
+  .sidebar-toggle:hover {
+    background-color: rgba(102, 115, 188, 0.1);
+  }
+
+  .sidebar-tab {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    border-radius: 0.7rem;
+
+    padding: 0.75rem 1rem;
+    box-sizing: border-box;
+
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .sidebar-tab-title {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    font-weight: 500;
+
+    color: var(--sl-color-gray-2);
+
+    word-break: break-word;
+  }
+
+  .sidebar-tab:hover {
+    background-color: rgba(102, 115, 188, 0.1);
+  }
+
+  .sidebar-tab.active {
+    background-color: rgba(102, 115, 188, 0.1);
+  }
+
+  @media (max-width: 1150px) {
+    .sidebar-column {
+      position: absolute;
+      transform: translateX(-100%);
+      transition: transform 0.2s ease-in-out;
+      border-right: 1px solid var(--sl-color-gray-5);
+    }
+
+    .sidebar-column.active {
+      transform: translateX(0);
+    }
+
+    .sidebar-toggle {
+      display: block;
+    }
+  }
+
+  .Item-card {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    transition: all 0.2s ease;
+
+    gap: 0.9rem;
+    width: 100%;
+    padding: 1rem;
+
+    text-decoration: none;
+    border-top: 1px solid var(--sl-color-gray-5);
+  }
+
+  .Item-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+
+  .Item-content {
+    text-align: left;
+  }
+
+  .Item-name {
+    font-size: 0.8rem;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+
+  .Item-card:hover {
+    background-color: rgba(102, 115, 188, 0.05);
+  }
+</style>
