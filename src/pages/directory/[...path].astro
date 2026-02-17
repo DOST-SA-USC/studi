@@ -1,0 +1,14 @@
+---
+import initialFoldersRaw from "Public/Folders.json";
+import type { Catalog } from "src/pages/directory/types/catalog";
+
+import Directory from "src/pages/directory/components/directory.astro";
+
+const catalog = initialFoldersRaw as unknown as Catalog;
+
+const { path } = Astro.params;
+
+const pathSegments = path ? path.split("/").filter(Boolean) : [];
+---
+
+<Directory catalog={catalog} pathSegments={pathSegments} />

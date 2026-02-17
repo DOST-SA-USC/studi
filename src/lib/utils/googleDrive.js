@@ -82,22 +82,26 @@ export async function retrieveFile(folderId, currentPath = "") {
     console.error("Google Drive API Error:", error.message);
 
     if (error.code === 404 || error.code === 400) {
-      return { 
-        error: "Folder not found", 
+      return {
+        error: "Folder not found",
         message: "The provided Folder ID is invalid or doesn't exist.",
-        code: 404 
-      };
-    }
-    
-    if (error.code === 403) {
-      return { 
-        error: "Access Denied", 
-        message: "The service account does not have permission to view this folder.",
-        code: 403 
+        code: 404,
       };
     }
 
-    return { error: "Server Error", message: "Something went wrong with the Drive API.", code: 500 };
+    if (error.code === 403) {
+      return {
+        error: "Access Denied",
+        message:
+          "The service account does not have permission to view this folder.",
+        code: 403,
+      };
+    }
+
+    return {
+      error: "Server Error",
+      message: "Something went wrong with the Drive API.",
+      code: 500,
+    };
   }
-  
 }
