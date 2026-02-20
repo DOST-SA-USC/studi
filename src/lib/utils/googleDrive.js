@@ -69,11 +69,22 @@ export async function retrieveFile(folderId, currentPath = "") {
       }
       // 3. FILE
       else {
-        allFiles.push({
+        const fileData = {
           ...baseData,
           type: "file",
           mimeType: file.mimeType,
-        });
+        };
+
+        if (file.mimeType.startsWith("application/vnd.google-apps")) {
+          // google docs / sheets / slides
+          fileData.viewlink = file.webViewLink;
+        } else {
+          // pdf / image / etc.
+          fileData.viewlink = file.webViewLink;
+          fileData.contentLink = file.webContentLink;
+        }
+
+        allFiles.push(fileData);
       }
     }
     console.log(allFiles);

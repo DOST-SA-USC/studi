@@ -1,27 +1,31 @@
 ---
-import type { Catalog } from "src/pages/directory/types/catalog.ts";
-import { buildDirectoryContext } from "src/pages/directory/utils/catalogNavigation.ts";
+import type { Directory } from "@/pages/directory/types/directory";
+import { buildDirectoryContext } from "@/pages/directory/utils/directoryNavigation";
 import "src/styles/global.css";
+import { fetchDirectory } from "@/pages/directory/utils/directoryServer.ts";
 
 interface Props {
-  catalog: Catalog;
+  directory: Directory;
   pathSegments: string[];
 }
 
-const { catalog, pathSegments } = Astro.props;
+const { directory, pathSegments } = Astro.props;
 const BASE_URL = "/directory";
 
 // ==== NAVBAR ITEMS ====
-const navbarItems = catalog;
+const navbarItems = directory;
 const activeProgramId = pathSegments[0];
 
 // ==== SIDEBAR ITEMS ====
-const activeProgram = catalog.find((p) => p.id === activeProgramId);
-const sidebarItems = activeProgram ? activeProgram.courses : [];
+const activeProgram = directory.find((p) => p.id === activeProgramId);
+const sidebarResult = activeProgram
+  ? await fetchDirectory(activeProgramId)
+  : { directory: [], errorMessage: undefined };
+const sidebarItems = sidebarResult.directory;
 const activeCourseId = pathSegments[1];
 
 // ==== GRID ITEMS ====
-const context = buildDirectoryContext(catalog, pathSegments);
+const context = await buildDirectoryContext(pathSegments);
 const showGridContent = pathSegments.length >= 2;
 
 // ==== HELPER FUNCTION ====
@@ -122,7 +126,7 @@ const getIconSrc = (type: string) => {
             context.entries.length > 0 ? (
               context.entries.map((item) => {
                 const href =
-                  item.type === "folder" ? item.href : item.href || "#";
+                  item.type === "folder" ? item.href : item.viewLink || "#";
                 return (
                   <a
                     href={href}

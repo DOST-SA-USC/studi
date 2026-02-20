@@ -1,14 +1,17 @@
 ---
-import initialFoldersRaw from "public/Folders.json";
-import type { Catalog } from "src/pages/directory/types/catalog";
+import { fetchDirectory } from "@/pages/directory/utils/directoryServer.ts";
 
-import Directory from "src/pages/directory/components/directory.astro";
+import DirectoryPage from "src/pages/directory/components/directory.astro";
 
-const catalog = initialFoldersRaw as unknown as Catalog;
+const ROOT_ID = "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y";
+
+const directoryResult = await fetchDirectory(ROOT_ID);
+
+const directory = directoryResult.directory;
 
 const { path } = Astro.params;
 
 const pathSegments = path ? path.split("/").filter(Boolean) : [];
 ---
 
-<Directory catalog={catalog} pathSegments={pathSegments} />
+<DirectoryPage directory={directory} pathSegments={pathSegments} />
