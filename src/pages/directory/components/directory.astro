@@ -75,10 +75,10 @@ const getIconSrc = (type: string) => {
             sidebarItems.length > 0 ? (
               sidebarItems.map((item) => (
                 <a
-                  href={`${BASE_URL}/${activeProgramId}/${item.id}`}
+                  href={`${BASE_URL}/${activeProgramId}/${item.targetId}`}
                   class:list={[
                     "sidebar-tab nav-item",
-                    { active: item.id === activeCourseId },
+                    { active: item.targetId === activeCourseId },
                   ]}
                 >
                   <div class="sidebar-tab-title">{item.name}</div>
@@ -121,15 +121,17 @@ const getIconSrc = (type: string) => {
       </div>
 
       <div class="card-grid">
+        <!-- ==== debugging ==== -->
+        <p>Current Path: {pathSegments.join(" > ")}</p>
+        <p>Fetching ID: {pathSegments[pathSegments.length - 1]}</p>
+        <!-- =================== -->
         {
           showGridContent ? (
             context.entries.length > 0 ? (
               context.entries.map((item) => {
-                const href =
-                  item.type === "folder" ? item.href : item.viewLink || "#";
                 return (
                   <a
-                    href={href}
+                    href={item.href}
                     class="Item-card nav-item"
                     data-type={item.type}
                   >

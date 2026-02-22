@@ -24,7 +24,9 @@ const buildEntryData = (
 
     return {
       ...entry,
-      href: `${baseHref}/${navigationId}`.replace(/\/+$/, ""),
+      href: entry.type === "file" 
+        ? entry.viewLink 
+        : `${baseHref}/${navigationId}`.replace(/\/+$/, "")
     };
   });
 };

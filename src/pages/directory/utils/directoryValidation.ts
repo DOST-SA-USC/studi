@@ -24,9 +24,9 @@ const isDirectoryEntry = (value: unknown): value is DirectoryEntry => {
     return false;
   }
 
-  if (value.type === "file" && !isString(value.viewLink)) {
-    return false;
-  }
+  // if (value.type === "file" && !isString(value.viewLink)) {
+  //   return false;
+  // }
 
   if (value.type === "shortcut" && !isString(value.targetId)) {
     return false;
