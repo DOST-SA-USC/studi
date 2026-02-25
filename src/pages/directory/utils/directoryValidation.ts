@@ -1,8 +1,5 @@
 // src/utils/catalogValidation.ts
-import type { 
-  Directory, 
-  DirectoryEntry, 
-} from "../types/directory";
+import type { Directory, DirectoryEntry } from "../types/directory";
 
 export type ParseResult<T> =
   | { ok: true; value: T }
@@ -47,7 +44,8 @@ export const parseDirectory = (value: unknown): ParseResult<Directory> => {
   if (!isDirectory(value)) {
     return {
       ok: false,
-      error: "API response is invalid: Expected a list of valid folders, files, or shortcuts.",
+      error:
+        "API response is invalid: Expected a list of valid folders, files, or shortcuts.",
     };
   }
 

@@ -1,8 +1,10 @@
 ---
 import type { Directory } from "@/pages/directory/types/directory";
 import { buildDirectoryContext } from "@/pages/directory/utils/directoryNavigation";
-import "src/styles/global.css";
+// import "src/styles/global.css";
 import { fetchDirectory } from "@/pages/directory/utils/directoryServer.ts";
+// import SiteTitle from "src/components/override-components/SiteTitle.astro"
+// import ThemeSwitch from "src/components/override-components/ThemeSwitch.astro"
 
 interface Props {
   directory: Directory;
@@ -106,7 +108,6 @@ const getIconSrc = (type: string) => {
         </a>
 
         <div class="breadcrumb-container">
-          <a href={BASE_URL} class="breadcrumb-link nav-item">directory</a>
           {
             context.breadcrumbs.map((crumb) => (
               <>
@@ -121,10 +122,6 @@ const getIconSrc = (type: string) => {
       </div>
 
       <div class="card-grid">
-        <!-- ==== debugging ==== -->
-        <p>Current Path: {pathSegments.join(" > ")}</p>
-        <p>Fetching ID: {pathSegments[pathSegments.length - 1]}</p>
-        <!-- =================== -->
         {
           showGridContent ? (
             context.entries.length > 0 ? (
@@ -217,10 +214,26 @@ const getIconSrc = (type: string) => {
     gap: 1rem;
   }
 
+  .undo-redo-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 1rem;
+    text-decoration: none;
+    min-width: 30px;
+    min-height: 30px;
+  }
+
+  .undo-redo-btn:hover {
+    background-color: rgba(102, 115, 188, 0.1);
+  }
+
   .breadcrumb-container {
     border-radius: 6px;
     flex-grow: 1;
     min-height: 30px;
+    max-width:;
     background-color: rgba(102, 115, 188, 0.1);
     padding: 10px;
   }
@@ -247,6 +260,7 @@ const getIconSrc = (type: string) => {
     justify-content: flex-start;
     align-items: center;
     max-height: fit-content;
+    min-height: 50px;
     border-bottom: 1px solid var(--sl-color-gray-5);
   }
 
@@ -403,5 +417,29 @@ const getIconSrc = (type: string) => {
 
   .Item-card:hover {
     background-color: rgba(102, 115, 188, 0.05);
+  }
+
+  .empty-msg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    color: var(--sl-color-gray-3);
+    font-size: 0.9rem;
+    font-style: italic;
+    text-align: center;
+    margin: 0.5rem;
+  }
+
+  .empty-msg-grid {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    padding: 3rem;
+    text-align: center;
+    margin: 1rem 0;
   }
 </style>

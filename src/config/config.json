@@ -24,11 +24,8 @@
   },
 
   "navigation_button": {
-    "enable": true,
-    "label": "Get Started",
-    "translations": {
-      "fr": "Erste Schritte"
-    },
+    "enable": false,
+    "label": "How To ",
     "link": "/getting-started/introduction/overview/"
   }
 }

@@ -11,11 +11,13 @@ const emptyDirectory: Directory = [];
 const cache = new Map<string, { data: DirectoryFetchResult; expiry: number }>();
 const CACHE_TTL = 1000 * 60 * 5;
 
-export const fetchDirectory = async (id: string): Promise<DirectoryFetchResult> => {
+export const fetchDirectory = async (
+  id: string,
+): Promise<DirectoryFetchResult> => {
   const now = Date.now();
 
   //debugging
-  console.log("(" + id + ")"); 
+  console.log("(" + id + ")");
 
   const cached = cache.get(id);
   if (cached && now < cached.expiry) {
@@ -26,7 +28,7 @@ export const fetchDirectory = async (id: string): Promise<DirectoryFetchResult> 
   try {
     const apiUrl = `https://studi.dostsausc.org/api/${id}`;
     const response = await fetch(apiUrl, {
-      headers: { 'x-api-key': import.meta.env.API_KEY }
+      headers: { "x-api-key": import.meta.env.API_KEY },
     });
 
     if (!response.ok) {
@@ -51,14 +53,15 @@ export const fetchDirectory = async (id: string): Promise<DirectoryFetchResult> 
 
     cache.set(id, {
       data: result,
-      expiry: now + CACHE_TTL
+      expiry: now + CACHE_TTL,
     });
 
     return result;
-
   } catch (error) {
     if (cached) {
-      console.warn(`[Cache Stale] API unreachable, serving expired data for ${id}`);
+      console.warn(
+        `[Cache Stale] API unreachable, serving expired data for ${id}`,
+      );
       return cached.data;
     }
 

@@ -1,7 +1,7 @@
 ---
 import { fetchDirectory } from "@/pages/directory/utils/directoryServer.ts";
-
 import DirectoryPage from "src/pages/directory/components/directory.astro";
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 
 const ROOT_ID = "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y";
 
@@ -14,4 +14,12 @@ const { path } = Astro.params;
 const pathSegments = path ? path.split("/").filter(Boolean) : [];
 ---
 
-<DirectoryPage directory={directory} pathSegments={pathSegments} />
+<StarlightPage
+  frontmatter={{
+    title: "Directory",
+    description: "This is where the notes directory is located",
+    template: "splash",
+  }}
+>
+  <DirectoryPage directory={directory} pathSegments={pathSegments} />
+</StarlightPage>

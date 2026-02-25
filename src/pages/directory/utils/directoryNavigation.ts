@@ -1,4 +1,4 @@
-import { fetchDirectory } from "@/pages/directory/utils/directoryServer.ts"
+import { fetchDirectory } from "@/pages/directory/utils/directoryServer.ts";
 import type { DirectoryEntry } from "../types/directory";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 
@@ -15,7 +15,7 @@ interface DirectoryContext {
 
 const buildEntryData = (
   entries: DirectoryEntry[],
-  pathSegments: string[]
+  pathSegments: string[],
 ): DirectoryEntry[] => {
   const baseHref = `/directory/${pathSegments.join("/")}`;
 
@@ -24,9 +24,10 @@ const buildEntryData = (
 
     return {
       ...entry,
-      href: entry.type === "file" 
-        ? entry.viewLink 
-        : `${baseHref}/${navigationId}`.replace(/\/+$/, "")
+      href:
+        entry.type === "file"
+          ? entry.viewLink
+          : `${baseHref}/${navigationId}`.replace(/\/+$/, ""),
     };
   });
 };
@@ -34,17 +35,17 @@ const buildEntryData = (
 // temporary
 const buildBreadcrumbs = (pathSegments: string[]): Breadcrumb[] => {
   const breadcrumbs: Breadcrumb[] = [
-    { label: "Home", href: "/directory" }
+    { label: "directory", href: "/directory" },
   ];
 
   let accumulatedPath = "/directory";
 
   pathSegments.forEach((segment) => {
     accumulatedPath += `/${segment}`;
-    
+
     breadcrumbs.push({
-      label: segment, 
-      href: accumulatedPath
+      label: segment,
+      href: accumulatedPath,
     });
   });
 
@@ -55,12 +56,11 @@ export const buildDirectoryContext = async (
   pathSegments: string[],
   errorMessage?: string,
 ): Promise<DirectoryContext> => {
-
   if (pathSegments.length <= 1) {
     return {
       entries: [],
       breadcrumbs: buildBreadcrumbs(pathSegments),
-      errorMessage: undefined 
+      errorMessage: undefined,
     };
   }
 
@@ -70,16 +70,17 @@ export const buildDirectoryContext = async (
   const result = await fetchDirectory(currentId);
   const data = result.directory;
 
-  if(!data){
-    return{
+  if (!data) {
+    return {
       entries: [],
       breadcrumbs: buildBreadcrumbs(pathSegments),
-      errorMessage: errorMessage ?? "Error: there was an error fetching this folder",
-    }
+      errorMessage:
+        errorMessage ?? "Error: there was an error fetching this folder",
+    };
   }
 
-  return{
-      entries: buildEntryData(data, pathSegments),
-      breadcrumbs: buildBreadcrumbs(pathSegments)
-  }
+  return {
+    entries: buildEntryData(data, pathSegments),
+    breadcrumbs: buildBreadcrumbs(pathSegments),
+  };
 };
