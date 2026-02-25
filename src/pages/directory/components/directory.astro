@@ -1,0 +1,445 @@
+---
+import type { Directory } from "@/pages/directory/types/directory";
+import { buildDirectoryContext } from "@/pages/directory/utils/directoryNavigation";
+// import "src/styles/global.css";
+import { fetchDirectory } from "@/pages/directory/utils/directoryServer.ts";
+// import SiteTitle from "src/components/override-components/SiteTitle.astro"
+// import ThemeSwitch from "src/components/override-components/ThemeSwitch.astro"
+
+interface Props {
+  directory: Directory;
+  pathSegments: string[];
+}
+
+const { directory, pathSegments } = Astro.props;
+const BASE_URL = "/directory";
+
+// ==== NAVBAR ITEMS ====
+const navbarItems = directory;
+const activeProgramId = pathSegments[0];
+
+// ==== SIDEBAR ITEMS ====
+const activeProgram = directory.find((p) => p.id === activeProgramId);
+const sidebarResult = activeProgram
+  ? await fetchDirectory(activeProgramId)
+  : { directory: [], errorMessage: undefined };
+const sidebarItems = sidebarResult.directory;
+const activeCourseId = pathSegments[1];
+
+// ==== GRID ITEMS ====
+const context = await buildDirectoryContext(pathSegments);
+const showGridContent = pathSegments.length >= 2;
+
+// ==== HELPER FUNCTION ====
+const getIconSrc = (type: string) => {
+  const icons: Record<string, string> = {
+    folder: "/directory-icons/primary-folder.svg",
+    file: "/directory-icons/primary-file.svg",
+    pdf: "/directory-icons/primary-file.svg",
+    default: "/directory-icons/primary-unknown.svg",
+  };
+  return icons[type] || icons.default;
+};
+---
+
+<div class="directory-container">
+  <div class="navbar-container">
+    <a id="toggle-sidebar-btn" class="sidebar-toggle">
+      <img src="/directory-icons/primary-menu.svg" alt="MENU" />
+    </a>
+    <div id="navbar-target" class="navbar-scroll-wrapper">
+      {
+        navbarItems.map((item) => (
+          <a
+            href={`${BASE_URL}/${item.id}`}
+            class:list={[
+              "navbar-tab nav-item",
+              { active: item.id === activeProgramId },
+            ]}
+          >
+            <div class="navbar-tab-title">{item.name}</div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="subfolder-content">
+    <div class="sidebar-column bg-lightmode-body dark:bg-body">
+      <div class="sidebar-scroll-wrapper">
+        <div class="sidebar-header">
+          <span class="sidebar-title">
+            {activeProgram ? activeProgram.name : "Programs"}
+          </span>
+        </div>
+        <div id="sidebar-target" class="sidebar-content">
+          {
+            sidebarItems.length > 0 ? (
+              sidebarItems.map((item) => (
+                <a
+                  href={`${BASE_URL}/${activeProgramId}/${item.targetId}`}
+                  class:list={[
+                    "sidebar-tab nav-item",
+                    { active: item.targetId === activeCourseId },
+                  ]}
+                >
+                  <div class="sidebar-tab-title">{item.name}</div>
+                </a>
+              ))
+            ) : (
+              <div class="empty-msg">
+                {activeProgram
+                  ? "No courses available."
+                  : "Select a program above."}
+              </div>
+            )
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="file-window bg-lightmode-dark dark:bg-dark">
+      <div class="folder-header">
+        <a id="history-back" class="undo-redo-btn">
+          <img src="/directory-icons/primary-undo.svg" alt="Back" />
+        </a>
+        <a id="history-forward" class="undo-redo-btn">
+          <img src="/directory-icons/primary-redo.svg" alt="Back" />
+        </a>
+
+        <div class="breadcrumb-container">
+          {
+            context.breadcrumbs.map((crumb) => (
+              <>
+                <span class="crumb-separator">/</span>
+                <a href={crumb.href} class="breadcrumb-link nav-item">
+                  {crumb.label}
+                </a>
+              </>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="card-grid">
+        {
+          showGridContent ? (
+            context.entries.length > 0 ? (
+              context.entries.map((item) => {
+                return (
+                  <a
+                    href={item.href}
+                    class="Item-card nav-item"
+                    data-type={item.type}
+                  >
+                    <img
+                      src={getIconSrc(item.type)}
+                      class="Item-icon"
+                      alt={item.type}
+                    />
+                    <span class="Item-name">{item.name}</span>
+                  </a>
+                );
+              })
+            ) : (
+              <div class="empty-msg-grid">
+                {context.errorMessage || "This folder is empty."}
+              </div>
+            )
+          ) : (
+            <div class="empty-msg-grid prompt">
+              {activeProgram
+                ? "Select a course from the sidebar to view its contents."
+                : "Select a program from the top bar to get started."}
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const btn = document.getElementById("toggle-sidebar-btn");
+  const sidebar = document.querySelector(".sidebar-column");
+
+  btn?.addEventListener("click", () => {
+    sidebar?.classList.toggle("active");
+  });
+
+  const backBtn = document.getElementById("history-back");
+  const fwdBtn = document.getElementById("history-forward");
+
+  backBtn?.addEventListener("click", () => {
+    window.history.back();
+  });
+
+  fwdBtn?.addEventListener("click", () => {
+    window.history.forward();
+  });
+</script>
+
+<style is:global>
+  .directory-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+
+  .subfolder-content {
+    border-radius: 6px;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    min-height: 600px;
+  }
+
+  .file-window {
+    flex-grow: 1;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+
+  .folder-header {
+    width: 100%;
+    padding: 1rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+
+  .undo-redo-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 1rem;
+    text-decoration: none;
+    min-width: 30px;
+    min-height: 30px;
+  }
+
+  .undo-redo-btn:hover {
+    background-color: rgba(102, 115, 188, 0.1);
+  }
+
+  .breadcrumb-container {
+    border-radius: 6px;
+    flex-grow: 1;
+    min-height: 30px;
+    max-width:;
+    background-color: rgba(102, 115, 188, 0.1);
+    padding: 10px;
+  }
+
+  .breadcrumb-link {
+    text-decoration: none;
+  }
+
+  /* ==== GRID ==== */
+  @layer starlight.components {
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .card-grid > :global(*) {
+      margin-top: 0 !important;
+    }
+  }
+
+  /* ==== NAVBAR ==== */
+  .navbar-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    max-height: fit-content;
+    min-height: 50px;
+    border-bottom: 1px solid var(--sl-color-gray-5);
+  }
+
+  .navbar-scroll-wrapper {
+    display: flex;
+    overflow-x: auto;
+    width: 100%;
+    scrollbar-width: none;
+  }
+
+  .navbar-scroll-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navbar-tab {
+    min-width: fit-content;
+    display: block;
+    padding: 1rem;
+    text-decoration: none;
+    overflow: hidden;
+    transition:
+      background-color 0.2s ease-in-out,
+      border-color 0.2s ease-in-out,
+      color 0.2s ease-in-out;
+    white-space: nowrap;
+  }
+
+  .navbar-tab-title {
+    font-size: 0.8rem;
+    line-height: 1.2;
+    font-weight: 500;
+    color: var(--sl-color-gray-2);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    transition: color 0.2s ease;
+  }
+
+  .navbar-tab:hover .tab-title {
+    color: #6673bc;
+  }
+
+  .navbar-tab:hover,
+  .navbar-tab.active {
+    background-color: rgba(102, 115, 188, 0.1);
+    border-bottom: 3px solid #6673bc;
+    padding-bottom: calc(1rem - 3px);
+  }
+
+  /* ==== SIDEBAR ==== */
+  .sidebar-column {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex-shrink: 0;
+  }
+
+  .sidebar-scroll-wrapper {
+    height: 100%;
+    overflow-y: auto;
+    padding: 1.5rem;
+  }
+
+  .sidebar-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--sl-color-hairline-light);
+    font-weight: 600;
+  }
+
+  .sidebar-toggle {
+    cursor: pointer;
+    padding: 4px 8px;
+    margin-right: 10px;
+    border-radius: 4px;
+    display: none;
+    text-decoration: none;
+  }
+
+  .sidebar-toggle:hover {
+    background-color: rgba(102, 115, 188, 0.1);
+  }
+
+  .sidebar-tab {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    border-radius: 0.7rem;
+    padding: 0.75rem 1rem;
+    box-sizing: border-box;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .sidebar-tab-title {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    font-weight: 500;
+    color: var(--sl-color-gray-2);
+    word-break: break-word;
+  }
+
+  .sidebar-tab:hover,
+  .sidebar-tab.active {
+    background-color: rgba(102, 115, 188, 0.1);
+  }
+
+  @media (max-width: 1150px) {
+    .sidebar-column {
+      position: absolute;
+      transform: translateX(-100%);
+      transition: transform 0.2s ease-in-out;
+      border-right: 1px solid var(--sl-color-gray-5);
+    }
+
+    .sidebar-column.active {
+      transform: translateX(0);
+    }
+
+    .sidebar-toggle {
+      display: block;
+    }
+  }
+
+  /* ==== GRID ITEMS ==== */
+  .Item-card {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    transition: all 0.2s ease;
+    gap: 0.9rem;
+    width: 100%;
+    padding: 1rem;
+    text-decoration: none;
+    border-top: 1px solid var(--sl-color-gray-5);
+  }
+
+  .Item-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+
+  .Item-content {
+    text-align: left;
+  }
+
+  .Item-name {
+    font-size: 0.8rem;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+
+  .Item-card:hover {
+    background-color: rgba(102, 115, 188, 0.05);
+  }
+
+  .empty-msg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    color: var(--sl-color-gray-3);
+    font-size: 0.9rem;
+    font-style: italic;
+    text-align: center;
+    margin: 0.5rem;
+  }
+
+  .empty-msg-grid {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    padding: 3rem;
+    text-align: center;
+    margin: 1rem 0;
+  }
+</style>
