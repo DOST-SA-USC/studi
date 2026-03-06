@@ -24,7 +24,7 @@ export const fetchDirectory = async (id: string): Promise<fetchResult> => {
     if (!response.ok) {
       console.error("API Fetch Error: Response not OK");
       return {
-        folder_name: "",
+        folderName: "",
         directory: emptyDirectory,
         errorMessage: `Catalog request failed (Status: ${response.status}).`,
       };
@@ -35,7 +35,7 @@ export const fetchDirectory = async (id: string): Promise<fetchResult> => {
 
     if (!parsed.ok) {
       return {
-        folder_name: "",
+        folderName: "",
         directory: emptyDirectory,
         errorMessage: "The data received from the server was invalid.",
       };
@@ -59,7 +59,7 @@ export const fetchDirectory = async (id: string): Promise<fetchResult> => {
 
     console.error("API Fetch Error:", error);
     return {
-      folder_name: "",
+      folderName: "",
       directory: emptyDirectory,
       errorMessage: "Connection error: Unable to reach the API.",
     };

@@ -50,7 +50,7 @@ const buildBreadcrumbs = (pathSegments: string[]): Breadcrumb[] => {
     const cacheItem = cache.get(segment);
 
     const label =
-      cacheItem === undefined ? segment : cacheItem.data.folder_name;
+      cacheItem === undefined ? segment : cacheItem.data.folderName;
     breadcrumbs.push({
       label: label,
       href: accumulatedPath,
