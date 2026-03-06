@@ -1,5 +1,9 @@
 // src/utils/catalogValidation.ts
-import type { Directory, DirectoryEntry } from "../types/directory";
+import type {
+  Directory,
+  DirectoryEntry,
+  fetchResult,
+} from "../types/directory";
 
 export type ParseResult<T> =
   | { ok: true; value: T }
@@ -21,9 +25,9 @@ const isDirectoryEntry = (value: unknown): value is DirectoryEntry => {
     return false;
   }
 
-  // if (value.type === "file" && !isString(value.viewLink)) {
-  //   return false;
-  // }
+  if (value.type === "file" && !isString(value.viewLink)) {
+    return false;
+  }
 
   if (value.type === "shortcut" && !isString(value.targetId)) {
     return false;
@@ -40,8 +44,20 @@ const isDirectory = (value: unknown): value is Directory => {
   return value.every(isDirectoryEntry);
 };
 
-export const parseDirectory = (value: unknown): ParseResult<Directory> => {
-  if (!isDirectory(value)) {
+const isFetchResult = (value: unknown): value is fetchResult => {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  if (!isString(value.folder_name) || !Array.isArray(value.entries)) {
+    return false;
+  }
+
+  return isDirectory(value.entries);
+};
+
+export const parseDirectory = (value: unknown): ParseResult<fetchResult> => {
+  if (!isFetchResult(value)) {
     return {
       ok: false,
       error:

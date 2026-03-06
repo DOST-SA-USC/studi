@@ -1,23 +1,13 @@
-import type { Directory } from "../types/directory";
+import type { Directory, fetchResult } from "../types/directory";
 import { parseDirectory } from "./directoryValidation";
-
-export interface DirectoryFetchResult {
-  directory: Directory;
-  errorMessage?: string;
-}
 
 const emptyDirectory: Directory = [];
 
-const cache = new Map<string, { data: DirectoryFetchResult; expiry: number }>();
+export const cache = new Map<string, { data: fetchResult; expiry: number }>();
 const CACHE_TTL = 1000 * 60 * 5;
 
-export const fetchDirectory = async (
-  id: string,
-): Promise<DirectoryFetchResult> => {
+export const fetchDirectory = async (id: string): Promise<fetchResult> => {
   const now = Date.now();
-
-  //debugging
-  console.log("(" + id + ")");
 
   const cached = cache.get(id);
   if (cached && now < cached.expiry) {
@@ -34,6 +24,7 @@ export const fetchDirectory = async (
     if (!response.ok) {
       console.error("API Fetch Error: Response not OK");
       return {
+        folder_name: "",
         directory: emptyDirectory,
         errorMessage: `Catalog request failed (Status: ${response.status}).`,
       };
@@ -44,12 +35,13 @@ export const fetchDirectory = async (
 
     if (!parsed.ok) {
       return {
+        folder_name: "",
         directory: emptyDirectory,
         errorMessage: "The data received from the server was invalid.",
       };
     }
 
-    const result = { directory: parsed.value };
+    const result = parsed.value;
 
     cache.set(id, {
       data: result,
@@ -67,6 +59,7 @@ export const fetchDirectory = async (
 
     console.error("API Fetch Error:", error);
     return {
+      folder_name: "",
       directory: emptyDirectory,
       errorMessage: "Connection error: Unable to reach the API.",
     };

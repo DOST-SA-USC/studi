@@ -98,8 +98,8 @@ export async function retrieveFile(folderId, currentPath = "") {
 
     let data = {
       folderName: currentFolderName,
-      entries: allFiles
-    }
+      entries: allFiles,
+    };
     return data;
   } catch (error) {
     console.error("Google Drive API Error:", error.message);

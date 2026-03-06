@@ -11,3 +11,9 @@ export interface DirectoryEntry {
 }
 
 export type Directory = DirectoryEntry[];
+
+export type fetchResult = {
+  folderName: string;
+  directory: Directory;
+  errorMessage?: string;
+};

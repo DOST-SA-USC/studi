@@ -1,4 +1,7 @@
-import { fetchDirectory } from "@/pages/directory/utils/directoryServer.ts";
+import {
+  cache,
+  fetchDirectory,
+} from "@/pages/directory/utils/directoryServer.ts";
 import type { DirectoryEntry } from "../types/directory";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 
@@ -41,10 +44,15 @@ const buildBreadcrumbs = (pathSegments: string[]): Breadcrumb[] => {
   let accumulatedPath = "/directory";
 
   pathSegments.forEach((segment) => {
+    if (!segment) return;
     accumulatedPath += `/${segment}`;
 
+    const cacheItem = cache.get(segment);
+
+    const label =
+      cacheItem === undefined ? segment : cacheItem.data.folder_name;
     breadcrumbs.push({
-      label: segment,
+      label: label,
       href: accumulatedPath,
     });
   });

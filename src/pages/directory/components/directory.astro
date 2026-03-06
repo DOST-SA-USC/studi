@@ -126,9 +126,10 @@ const getIconSrc = (type: string) => {
           showGridContent ? (
             context.entries.length > 0 ? (
               context.entries.map((item) => {
+                const href = item.type === "file" ? item.viewLink : item.href;
                 return (
                   <a
-                    href={item.href}
+                    href={href}
                     class="Item-card nav-item"
                     data-type={item.type}
                   >
