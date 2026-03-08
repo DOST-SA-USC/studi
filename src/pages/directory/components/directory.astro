@@ -1,29 +1,26 @@
 ---
 import type { Directory } from "@/pages/directory/types/directory";
 import { buildDirectoryContext } from "@/pages/directory/utils/directoryNavigation";
-// import "src/styles/global.css";
 import { fetchDirectory } from "@/pages/directory/utils/directoryServer.ts";
-// import SiteTitle from "src/components/override-components/SiteTitle.astro"
-// import ThemeSwitch from "src/components/override-components/ThemeSwitch.astro"
 
 interface Props {
-  directory: Directory;
+  entries?: Directory;
   pathSegments: string[];
 }
 
-const { directory, pathSegments } = Astro.props;
+const { entries = [], pathSegments } = Astro.props;
 const BASE_URL = "/directory";
 
 // ==== NAVBAR ITEMS ====
-const navbarItems = directory;
+const navbarItems = entries;
 const activeProgramId = pathSegments[0];
 
 // ==== SIDEBAR ITEMS ====
-const activeProgram = directory.find((p) => p.id === activeProgramId);
+const activeProgram = entries.find((p) => p.id === activeProgramId);
 const sidebarResult = activeProgram
   ? await fetchDirectory(activeProgramId)
-  : { directory: [], errorMessage: undefined };
-const sidebarItems = sidebarResult.directory;
+  : { entries: [], errorMessage: undefined };
+const sidebarItems = sidebarResult.entries;
 const activeCourseId = pathSegments[1];
 
 // ==== GRID ITEMS ====
@@ -75,19 +72,24 @@ const getIconSrc = (type: string) => {
         <div id="sidebar-target" class="sidebar-content">
           {
             sidebarItems.length > 0 ? (
-              sidebarItems.map((item) => (
-                <a
-                  href={`${BASE_URL}/${activeProgramId}/${item.targetId}`}
-                  class:list={[
-                    "sidebar-tab nav-item",
-                    { active: item.targetId === activeCourseId },
-                  ]}
-                >
-                  <div class="sidebar-tab-title">{item.name}</div>
-                </a>
-              ))
+              sidebarItems.map((item) => {
+                const currentId =
+                  item.type === "shortcut" ? item.targetId : item.id;
+
+                return (
+                  <a
+                    href={`${BASE_URL}/${activeProgramId}/${currentId}`}
+                    class:list={[
+                      "sidebar-tab nav-item",
+                      { active: currentId === activeCourseId },
+                    ]}
+                  >
+                    <div class="sidebar-tab-title">{item.name}</div>
+                  </a>
+                );
+              })
             ) : (
-              <div class="empty-msg">
+              <div class="status-msg empty-msg">
                 {activeProgram
                   ? "No courses available."
                   : "Select a program above."}
@@ -143,12 +145,12 @@ const getIconSrc = (type: string) => {
                 );
               })
             ) : (
-              <div class="empty-msg-grid">
+              <div class="status-msg empty-msg-grid">
                 {context.errorMessage || "This folder is empty."}
               </div>
             )
           ) : (
-            <div class="empty-msg-grid prompt">
+            <div class="status-msg empty-msg-grid prompt">
               {activeProgram
                 ? "Select a course from the sidebar to view its contents."
                 : "Select a program from the top bar to get started."}
@@ -420,27 +422,28 @@ const getIconSrc = (type: string) => {
     background-color: rgba(102, 115, 188, 0.05);
   }
 
-  .empty-msg {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-    color: var(--sl-color-gray-3);
-    font-size: 0.9rem;
-    font-style: italic;
-    text-align: center;
-    margin: 0.5rem;
-  }
-
-  .empty-msg-grid {
-    grid-column: 1 / -1;
+  .status-msg {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 300px;
-    padding: 3rem;
     text-align: center;
+    width: 100%;
+    color: var(--sl-color-gray-3);
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+
+  #empty-msg {
+    padding: 1.5rem;
+    margin: 0.5rem;
+    min-height: 200px;
+  }
+
+  #empty-msg-grid {
+    grid-column: 1 / -1;
+    padding: 3rem;
     margin: 1rem 0;
+    min-height: 300px;
   }
 </style>

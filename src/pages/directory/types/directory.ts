@@ -14,6 +14,6 @@ export type Directory = DirectoryEntry[];
  
 export type fetchResult ={
   folderName: string;
-  directory: Directory;
+  entries: Directory;
   errorMessage?: string;
 }

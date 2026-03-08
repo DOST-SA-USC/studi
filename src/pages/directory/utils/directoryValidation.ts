@@ -25,9 +25,10 @@ const isDirectoryEntry = (value: unknown): value is DirectoryEntry => {
     return false;
   }
 
-  if (value.type === "file" && !isString(value.viewLink)) {
-    return false;
-  }
+  // REMOVE COMMENT ONCE THERE IS VIEWLINK
+  // if (value.type === "file" && !isString(value.viewLink)) {
+  //   return false;
+  // }
 
   if (value.type === "shortcut" && !isString(value.targetId)) {
     return false;
@@ -45,13 +46,11 @@ const isDirectory = (value: unknown): value is Directory => {
 };
 
 const isFetchResult = (value: unknown): value is fetchResult => {
-  if (!isRecord(value)) {
-    return false;
-  }
+  if (!isRecord(value)) return false;
 
-  if (!isString(value.folder_name) || !Array.isArray(value.entries)) {
-    return false;
-  }
+  if (!('folderName' in value) || !isString(value.folderName)) return false;
+  
+  if (!('entries' in value) || !Array.isArray(value.entries)) return false;
 
   return isDirectory(value.entries);
 };

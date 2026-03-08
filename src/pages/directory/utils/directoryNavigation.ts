@@ -2,7 +2,7 @@ import {
   cache,
   fetchDirectory,
 } from "@/pages/directory/utils/directoryServer.ts";
-import type { DirectoryEntry } from "../types/directory";
+import type { Directory } from "../types/directory";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 
 interface Breadcrumb {
@@ -11,15 +11,15 @@ interface Breadcrumb {
 }
 
 interface DirectoryContext {
-  entries: DirectoryEntry[];
+  entries: Directory;
   breadcrumbs: Breadcrumb[];
   errorMessage?: string;
 }
 
 const buildEntryData = (
-  entries: DirectoryEntry[],
+  entries: Directory,
   pathSegments: string[],
-): DirectoryEntry[] => {
+): Directory => {
   const baseHref = `/directory/${pathSegments.join("/")}`;
 
   return entries.map((entry) => {
@@ -42,15 +42,18 @@ const buildBreadcrumbs = (pathSegments: string[]): Breadcrumb[] => {
   ];
 
   let accumulatedPath = "/directory";
+  const now = Date.now(); 
 
   pathSegments.forEach((segment) => {
     if (!segment) return;
     accumulatedPath += `/${segment}`;
 
     const cacheItem = cache.get(segment);
+    
+    const isCacheValid = cacheItem !== undefined && now < cacheItem.expiry;
 
-    const label =
-      cacheItem === undefined ? segment : cacheItem.data.folderName;
+    const label = isCacheValid ? cacheItem.data.folderName : segment;
+
     breadcrumbs.push({
       label: label,
       href: accumulatedPath,
@@ -61,8 +64,7 @@ const buildBreadcrumbs = (pathSegments: string[]): Breadcrumb[] => {
 };
 
 export const buildDirectoryContext = async (
-  pathSegments: string[],
-  errorMessage?: string,
+  pathSegments: string[]
 ): Promise<DirectoryContext> => {
   if (pathSegments.length <= 1) {
     return {
@@ -76,14 +78,13 @@ export const buildDirectoryContext = async (
   const currentId = pathSegments[pathLength - 1];
 
   const result = await fetchDirectory(currentId);
-  const data = result.directory;
+  const data = result.entries;
 
-  if (!data) {
+  if (result.errorMessage) {
     return {
       entries: [],
       breadcrumbs: buildBreadcrumbs(pathSegments),
-      errorMessage:
-        errorMessage ?? "Error: there was an error fetching this folder",
+      errorMessage: result.errorMessage, 
     };
   }
 

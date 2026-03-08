@@ -9,6 +9,8 @@ const CACHE_TTL = 1000 * 60 * 5;
 export const fetchDirectory = async (id: string): Promise<fetchResult> => {
   const now = Date.now();
 
+  console.log(id);
+
   const cached = cache.get(id);
   if (cached && now < cached.expiry) {
     console.log(`[Cache Hit] Serving ${id} from memory`);
@@ -25,7 +27,7 @@ export const fetchDirectory = async (id: string): Promise<fetchResult> => {
       console.error("API Fetch Error: Response not OK");
       return {
         folderName: "",
-        directory: emptyDirectory,
+        entries: emptyDirectory,
         errorMessage: `Catalog request failed (Status: ${response.status}).`,
       };
     }
@@ -36,7 +38,7 @@ export const fetchDirectory = async (id: string): Promise<fetchResult> => {
     if (!parsed.ok) {
       return {
         folderName: "",
-        directory: emptyDirectory,
+        entries: emptyDirectory,
         errorMessage: "The data received from the server was invalid.",
       };
     }
@@ -60,7 +62,7 @@ export const fetchDirectory = async (id: string): Promise<fetchResult> => {
     console.error("API Fetch Error:", error);
     return {
       folderName: "",
-      directory: emptyDirectory,
+      entries: emptyDirectory,
       errorMessage: "Connection error: Unable to reach the API.",
     };
   }
