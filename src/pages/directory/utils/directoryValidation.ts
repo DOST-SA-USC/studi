@@ -25,7 +25,7 @@ const isDirectoryEntry = (value: unknown): value is DirectoryEntry => {
     return false;
   }
 
-  if (value.type === "file" && !isString(value.webViewLink)) {
+  if (value.type === "file" && !isString(value.viewLink) && !isString(value.contentLink)) {
     return false;
   }
 

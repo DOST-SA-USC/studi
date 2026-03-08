@@ -89,7 +89,7 @@ export async function retrieveFile(folderId, currentPath = "") {
           fileData.viewlink = file.webViewLink;
         } else {
           // pdf / image / etc.
-          fileData.viewlink = file.webViewLink;
+          fileData.viewLink = file.webViewLink;
           fileData.contentLink = file.webContentLink;
         }
 

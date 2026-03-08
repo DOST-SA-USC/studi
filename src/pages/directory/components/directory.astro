@@ -128,13 +128,13 @@ const getIconSrc = (type: string) => {
           showGridContent ? (
             context.entries.length > 0 ? (
               context.entries.map((item) => {
-                const href =
-                  item.type === "file" ? item.webViewLink : item.href;
                 return (
                   <a
-                    href={href}
+                    href={item.href}
                     class="Item-card nav-item"
                     data-type={item.type}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <img
                       src={getIconSrc(item.type)}
@@ -231,6 +231,7 @@ const getIconSrc = (type: string) => {
 <style is:global>
   .skeleton {
     background-color: var(--sl-color-gray-5);
+    opacity: 0.5;
     animation: pulse 1.5s infinite ease-in-out;
   }
 
@@ -239,22 +240,27 @@ const getIconSrc = (type: string) => {
     width: 75%;
     height: 0.5rem;
     border-radius: 0.125rem;
+    opacity: 0.5;
     animation: pulse 1.5s infinite ease-in-out;
   }
 
   @keyframes pulse {
     0% {
-      opacity: 0.5;
+      opacity: 0.25;
     }
     50% {
       opacity: 1;
     }
     100% {
-      opacity: 0.5;
+      opacity: 0.25;
     }
   }
 
-  .skeleton .directory-container {
+  .nav-item {
+    cursor: pointer;
+  }
+
+  .directory-container {
     display: flex;
     flex-direction: column;
     width: 100%;
