@@ -70,6 +70,11 @@ const getIconSrc = (type: string) => {
           </span>
         </div>
         <div id="sidebar-target" class="sidebar-content">
+          <!-- <div
+            class="sidebar-tab nav-item"
+          >
+            <div class="sidebar-tab-title skeleton-text"></div>
+          </a> -->
           {
             sidebarItems.length > 0 ? (
               sidebarItems.map((item) => {
@@ -180,10 +185,80 @@ const getIconSrc = (type: string) => {
   fwdBtn?.addEventListener("click", () => {
     window.history.forward();
   });
+
+  const cardGrid = document.querySelector(".card-grid");
+  const sidebarTarget = document.getElementById("sidebar-target");
+
+  const gridWidths = [40, 20, 30, 20, 40, 50];
+  const sidebarWidths = [70, 50, 80, 60, 70];
+
+  const gridSkeletonHTML = gridWidths
+    .map(
+      (width) => `
+    <a class="Item-card" style="pointer-events: none;">
+      <div class="Item-icon skeleton"></div>
+      <div class="Item-name skeleton-text" style="width: ${width}%; margin: 0;"></div>
+    </a>
+  `,
+    )
+    .join("");
+
+  const sidebarSkeletonHTML = sidebarWidths
+    .map(
+      (width) => `
+    <div class="sidebar-tab" style="pointer-events: none;">
+      <div class="sidebar-tab-title skeleton-text" style="width: ${width}%; margin: 0;"></div>
+    </div>
+  `,
+    )
+    .join("");
+
+  const navbarTabs = document.querySelectorAll(".navbar-tab");
+  navbarTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      if (sidebarTarget) sidebarTarget.innerHTML = sidebarSkeletonHTML;
+      if (cardGrid) cardGrid.innerHTML = gridSkeletonHTML;
+    });
+  });
+
+  const otherNavItems = document.querySelectorAll(".sidebar-tab, .Item-card");
+  otherNavItems.forEach((item) => {
+    item.addEventListener("click", () => {
+      if (item.getAttribute("data-type") === "file") return;
+      if (cardGrid) {
+        cardGrid.innerHTML = gridSkeletonHTML;
+      }
+    });
+  });
 </script>
 
 <style is:global>
-  .directory-container {
+  .skeleton {
+    background-color: var(--sl-color-gray-5);
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+
+  .skeleton-text {
+    background-color: var(--sl-color-gray-5);
+    width: 75%;
+    height: 0.5rem;
+    border-radius: 0.125rem;
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.5;
+    }
+  }
+
+  .skeleton .directory-container {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -378,6 +453,7 @@ const getIconSrc = (type: string) => {
       transform: translateX(-100%);
       transition: transform 0.2s ease-in-out;
       border-right: 1px solid var(--sl-color-gray-5);
+      z-index: 10;
     }
 
     .sidebar-column.active {
@@ -405,6 +481,7 @@ const getIconSrc = (type: string) => {
   .Item-icon {
     width: 24px;
     height: 24px;
+    border-radius: 0.125rem;
     object-fit: contain;
   }
 

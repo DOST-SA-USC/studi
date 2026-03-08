@@ -48,9 +48,9 @@ const isDirectory = (value: unknown): value is Directory => {
 const isFetchResult = (value: unknown): value is fetchResult => {
   if (!isRecord(value)) return false;
 
-  if (!('folderName' in value) || !isString(value.folderName)) return false;
-  
-  if (!('entries' in value) || !Array.isArray(value.entries)) return false;
+  if (!("folderName" in value) || !isString(value.folderName)) return false;
+
+  if (!("entries" in value) || !Array.isArray(value.entries)) return false;
 
   return isDirectory(value.entries);
 };

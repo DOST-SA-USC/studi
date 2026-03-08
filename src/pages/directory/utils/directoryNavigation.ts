@@ -42,14 +42,14 @@ const buildBreadcrumbs = (pathSegments: string[]): Breadcrumb[] => {
   ];
 
   let accumulatedPath = "/directory";
-  const now = Date.now(); 
+  const now = Date.now();
 
   pathSegments.forEach((segment) => {
     if (!segment) return;
     accumulatedPath += `/${segment}`;
 
     const cacheItem = cache.get(segment);
-    
+
     const isCacheValid = cacheItem !== undefined && now < cacheItem.expiry;
 
     const label = isCacheValid ? cacheItem.data.folderName : segment;
@@ -64,7 +64,7 @@ const buildBreadcrumbs = (pathSegments: string[]): Breadcrumb[] => {
 };
 
 export const buildDirectoryContext = async (
-  pathSegments: string[]
+  pathSegments: string[],
 ): Promise<DirectoryContext> => {
   if (pathSegments.length <= 1) {
     return {
@@ -84,7 +84,7 @@ export const buildDirectoryContext = async (
     return {
       entries: [],
       breadcrumbs: buildBreadcrumbs(pathSegments),
-      errorMessage: result.errorMessage, 
+      errorMessage: result.errorMessage,
     };
   }
 
