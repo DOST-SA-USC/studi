@@ -5,7 +5,8 @@ export interface DirectoryEntry {
   fullSlug: string;
   parentPath: string;
   href?: string;
-  viewLink?: string;
+  webViewLink?: string;
+  webContentLink?: string;
   targetId?: string;
   targetType?: string;
 }

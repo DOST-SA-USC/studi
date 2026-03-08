@@ -3,8 +3,6 @@ import { fetchDirectory } from "@/pages/directory/utils/directoryServer.ts";
 import DirectoryPage from "src/pages/directory/components/directory.astro";
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 
-const ROOT_ID = "1DmyPKyoE5mcnU37g2t4f7arC3y2eIyRo";
-
 const directoryResult = await fetchDirectory(import.meta.env.ROOT_ID);
 
 const directory = directoryResult.entries;

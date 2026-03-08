@@ -70,11 +70,6 @@ const getIconSrc = (type: string) => {
           </span>
         </div>
         <div id="sidebar-target" class="sidebar-content">
-          <!-- <div
-            class="sidebar-tab nav-item"
-          >
-            <div class="sidebar-tab-title skeleton-text"></div>
-          </a> -->
           {
             sidebarItems.length > 0 ? (
               sidebarItems.map((item) => {
@@ -133,7 +128,8 @@ const getIconSrc = (type: string) => {
           showGridContent ? (
             context.entries.length > 0 ? (
               context.entries.map((item) => {
-                const href = item.type === "file" ? item.viewLink : item.href;
+                const href =
+                  item.type === "file" ? item.webViewLink : item.href;
                 return (
                   <a
                     href={href}
