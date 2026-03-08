@@ -24,13 +24,15 @@ export async function retrieveFile(folderId, currentPath = "") {
 
     const folderMetadata = await drive.files.get({
       fileId: folderId,
-      fields: "id, name, mimeType",
+      fields:
+        "id, name, mimeType, shortcutDetails, webViewLink, webContentLink",
     });
     const currentFolderName = folderMetadata.data.name;
 
     const res = await drive.files.list({
       q: `'${folderId}' in parents and trashed = false`,
-      fields: "files(id, name, mimeType, shortcutDetails)",
+      fields:
+        "files(id, name, mimeType, shortcutDetails, webViewLink, webContentLink)",
     });
     const files = res.data.files || [];
 
@@ -98,8 +100,8 @@ export async function retrieveFile(folderId, currentPath = "") {
 
     let data = {
       folderName: currentFolderName,
-      entries: allFiles
-    }
+      entries: allFiles,
+    };
     return data;
   } catch (error) {
     console.error("Google Drive API Error:", error.message);

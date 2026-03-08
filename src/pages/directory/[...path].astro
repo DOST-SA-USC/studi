@@ -3,11 +3,9 @@ import { fetchDirectory } from "@/pages/directory/utils/directoryServer.ts";
 import DirectoryPage from "src/pages/directory/components/directory.astro";
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 
-const ROOT_ID = "1LBMK4Rd5jyJhg-e_lki-xLPL1LOvme1Y";
+const directoryResult = await fetchDirectory(import.meta.env.ROOT_ID);
 
-const directoryResult = await fetchDirectory(ROOT_ID);
-
-const directory = directoryResult.directory;
+const directory = directoryResult.entries;
 
 const { path } = Astro.params;
 
@@ -21,5 +19,5 @@ const pathSegments = path ? path.split("/").filter(Boolean) : [];
     template: "splash",
   }}
 >
-  <DirectoryPage directory={directory} pathSegments={pathSegments} />
+  <DirectoryPage entries={directory} pathSegments={pathSegments} />
 </StarlightPage>
