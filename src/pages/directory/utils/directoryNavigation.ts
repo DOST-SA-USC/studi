@@ -29,7 +29,7 @@ const buildEntryData = (
       ...entry,
       href:
         entry.type === "file"
-          ? entry.webViewLink
+          ? entry.viewLink
           : `${baseHref}/${navigationId}`.replace(/\/+$/, ""),
     };
   });
