@@ -5,27 +5,12 @@
       "url": "/"
     },
     {
-      "name": "FAQs",
+      "name": "How to Contribute",
       "url": "/contribute/contribute"
     },
     {
-      "name": "Notes",
+      "name": "Directory",
       "url": "/directory"
-    },
-    {
-      "name": "Contact",
-      "url": "/"
-    },
-    {
-      "name": "Notes",
-      "url": "",
-      "hasChildren": true,
-      "children": [
-        {
-          "name": "Temp",
-          "url": "/temp/temp"
-        }
-      ]
     }
   ],
   "footer": {
@@ -43,23 +28,6 @@
         {
           "name": "About Us",
           "url": "/about"
-        },
-        {
-          "name": "Contacts",
-          "url": "/"
-        }
-      ]
-    },
-    "quick_links": {
-      "title": "Quick Links",
-      "links": [
-        {
-          "name": "FAQs",
-          "url": "/"
-        },
-        {
-          "name": "How to Contribute",
-          "url": "/"
         }
       ]
     },
@@ -73,6 +41,15 @@
         {
           "name": "Verify",
           "url": "https://verify.dostsausc.org/"
+        }
+      ]
+    },
+    "quick_links": {
+      "title": "Quick Links",
+      "links": [
+        {
+          "name": "How to Contribute",
+          "url": "/contribute/contribute"
         }
       ]
     }

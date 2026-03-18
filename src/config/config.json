@@ -2,10 +2,10 @@
   "site": {
     "title": "Project Studi",
     "description": "An open-source notes repository",
-    "email": "dostsausc.tech@gmail.com",
+    "email": "dostsausc.web@gmail.com",
     "logo": "/src/assets/logo-light.svg",
     "logo_darkmode": "/src/assets/logo-dark.svg",
-    "logo_width": "349",
+    "logo_width": "127",
     "logo_height": "32",
     "logo_text": "Studi"
   },
@@ -24,8 +24,8 @@
   },
 
   "navigation_button": {
-    "enable": false,
-    "label": "How To ",
-    "link": "/getting-started/introduction/overview/"
+    "enable": true,
+    "label": "Get started",
+    "link": "/contribute/contribute"
   }
 }
