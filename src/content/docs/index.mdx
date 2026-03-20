@@ -10,10 +10,10 @@ hero:
 ---
 
 import Section from "~/components/Section.astro";
-import HeroTabs from "~/components/HeroTabs.astro";
-import HeroTabsItem from "~/components/HeroTabsItem.astro";
+import Card from "~/components/user-components/NewCard.astro";
+import Grid from "~/components/user-components/Grid.astro";
 
-{/* <Section title="Main Features<span class='primary-text'>of Studi</span>" description="Explore the tools and design choices that make documentation efficient.">
+<Section title="Main Features<span class='primary-text'>of Studi</span>" description="Explore the tools and design choices that make documentation efficient.">
   <Grid columns={3}>
     <Card title="Note Repository" icon="open-book" iconColor="#6673BC">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed rutrum placerat congue.
@@ -28,33 +28,4 @@ import HeroTabsItem from "~/components/HeroTabsItem.astro";
     </Card>
 
   </Grid>
-</Section> */}
-
-<Section
-  title="How to use<span class='primary-text'>Project Studi</span>"
-  description="Contribute your own notes through our guide!"
->
-  <HeroTabs>
-    <HeroTabsItem
-      title="Click on the directory button"
-      subtitle="This opens the directory page"
-      number={1}
-      image="/src/assets/step-1.png"
-      imageAlt="Step 1 image"
-    />
-    <HeroTabsItem
-      title="Browse for your desired program"
-      subtitle="Notes from the community"
-      number={2}
-      image="/src/assets/step-2.png"
-      imageAlt="Step 2 image"
-    />
-    <HeroTabsItem
-      title="Start studying!"
-      subtitle="Click on it and it automatically opens"
-      number={3}
-      image="/src/assets/step-3.png"
-      imageAlt="Step 3 image"
-    />
-  </HeroTabs>
 </Section>
