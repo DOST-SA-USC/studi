@@ -281,6 +281,7 @@ const getIconSrc = (type: string) => {
     margin: 0;
     overflow: hidden;
     border-radius: 6px;
+    padding: 2px;
   }
 
   .folder-header {
@@ -327,6 +328,7 @@ const getIconSrc = (type: string) => {
     .card-grid {
       display: grid;
       grid-template-columns: 1fr;
+      padding-inline: 1rem;
     }
 
     .card-grid > :global(*) {
@@ -475,7 +477,7 @@ const getIconSrc = (type: string) => {
     transition: all 0.2s ease;
     gap: 0.9rem;
     width: 100%;
-    padding: 1rem;
+    padding: 1rem 0;
     text-decoration: none;
     border-top: 1px solid var(--sl-color-gray-5);
   }
@@ -524,5 +526,35 @@ const getIconSrc = (type: string) => {
     padding: 3rem;
     margin: 1rem 0;
     min-height: 300px;
+  }
+
+  @media (max-width: 768px) {
+    /* Starlight wrapper padding */
+    .sl-container,
+    .content-panel,
+    .sl-markdown-content {
+      padding-inline: 0.25rem !important;
+      margin-inline: 0 !important;
+    }
+
+    /* Your directory container */
+    .directory-container {
+      padding: 0;
+    }
+
+    /* The file window border radius is less necessary on mobile */
+    .file-window {
+      padding: 0;
+      border-radius: 0;
+    }
+
+    /* Tighten the card grid */
+    .card-grid {
+      padding-inline: 1rem;
+    }
+
+    .content-panel {
+      padding-block-end: 0rem !important;
+    }
   }
 </style>

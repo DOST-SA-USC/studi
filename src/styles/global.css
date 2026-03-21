@@ -118,6 +118,30 @@
   );
 }
 
+@media (max-width: 768px) {
+  header.no-sidebar {
+    display: flex !important;
+    align-items: center !important;
+    padding-block: 0 !important;
+  }
+
+  nav.navbar {
+    width: 100%;
+    align-items: center !important;
+  }
+
+  a.navbar-brand {
+    line-height: 1 !important;
+    padding-top: 0.9em;
+  }
+
+  a.navbar-brand img {
+    max-width: 150px !important;
+    width: auto !important;
+    height: 32px !important;
+  }
+}
+
 @import "./base.css";
 @import "./navigation.css";
 @import "./components.css";
