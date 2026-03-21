@@ -132,7 +132,7 @@
 
   a.navbar-brand {
     line-height: 1 !important;
-    padding-top: 0.9em;
+    padding: 0.3em;
   }
 
   a.navbar-brand img {
