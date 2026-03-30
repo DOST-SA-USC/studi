@@ -23,6 +23,6 @@
   "navigation_button": {
     "enable": true,
     "label": "Getting Started",
-    "link": "/contribute"
+    "link": "/contribute/contribute"
   }
 }
