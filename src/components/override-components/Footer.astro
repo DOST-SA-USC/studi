@@ -31,11 +31,11 @@ const currentLocal = Astro.currentLocale || "en";
         )
       }
       {
-        footer.quick_links && (
+        footer.company && (
           <div>
-            <h4>{footer.quick_links.title}</h4>
+            <h4>{footer.company.title}</h4>
             <ul>
-              {footer.quick_links?.links.map((link: any) => (
+              {footer.company?.links.map((link: any) => (
                 <li>
                   <a href={link.url}>{link.name}</a>
                 </li>
@@ -45,11 +45,11 @@ const currentLocal = Astro.currentLocale || "en";
         )
       }
       {
-        footer.company && (
+        footer.quick_links && (
           <div>
-            <h4>{footer.company.title}</h4>
+            <h4>{footer.quick_links.title}</h4>
             <ul>
-              {footer.company?.links.map((link: any) => (
+              {footer.quick_links?.links.map((link: any) => (
                 <li>
                   <a href={link.url}>{link.name}</a>
                 </li>
