@@ -5,7 +5,7 @@ import globals from "globals";
 
 export default [
   {
-    ignores: [".astro/**/*", "dist/**/*", "node_modules/**/*"],
+    ignores: [".astro/**/*", "dist/**/*", "node_modules/**/*", ".vercel/**/*"],
   },
 
   js.configs.recommended,

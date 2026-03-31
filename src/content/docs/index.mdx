@@ -5,27 +5,39 @@ template: splash
 hero:
   title: |
     Where Everybody
-    <span class="primary-text">Can Study</span>
+    <span class="primary-text">Can StuDi</span>
   tagline: Study new topics, contribute your own notes, and learn together
 ---
 
 import Section from "~/components/Section.astro";
-import Card from "~/components/user-components/NewCard.astro";
-import Grid from "~/components/user-components/Grid.astro";
+import HeroTabs from "~/components/HeroTabs.astro";
+import HeroTabsItem from "~/components/HeroTabsItem.astro";
 
-<Section title="Main Features<span class='primary-text'>of Studi</span>" description="Explore the tools and design choices that make documentation efficient.">
-  <Grid columns={3}>
-    <Card title="Note Repository" icon="open-book" iconColor="#6673BC">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed rutrum placerat congue.
-    </Card>
-
-    <Card title="Search" icon="seti:code-search" iconColor="#6673BC">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed rutrum placerat congue.
-    </Card>
-
-    <Card title="Open Contributions" icon="add-document" iconColor="#6673BC">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed rutrum placerat congue.
-    </Card>
-
-  </Grid>
+<Section
+  title="How to use<span class='primary-text'>Project Studi</span>"
+  description="In three easy to follow steps!!!!!!!!"
+>
+  <HeroTabs>
+    <HeroTabsItem
+      title="Click on the directory button"
+      subtitle="This opens the directory page"
+      number={1}
+      image="/src/assets/step-1.png"
+      imageAlt="Step 1 image"
+    />
+    <HeroTabsItem
+      title="Browse for your desired program"
+      subtitle="Notes from the community"
+      number={2}
+      image="/src/assets/step-2.png"
+      imageAlt="Step 2 image"
+    />
+    <HeroTabsItem
+      title="Start studying!"
+      subtitle="Click on it and it automatically opens"
+      number={3}
+      image="/src/assets/step-3.png"
+      imageAlt="Step 3 image"
+    />
+  </HeroTabs>
 </Section>

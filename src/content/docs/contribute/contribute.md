@@ -1,14 +1,14 @@
 ---
 title: Contribute Files
 description: Learn how to provide learning resources to Studi's reposistory.
-email: dostsausc.tech@gmail.com
+email: dostsausc.web@gmail.com
 ---
 
 Learn how to provide learning resources to Studi's repository.
 
 ## How to Contribute?
 
-Submit your notes and files through our email `dostsausc.tech@gmail.com` by
+Submit your notes and files through our email `dostsausc.web@gmail.com` by
 filling up the email template below.
 
 ```

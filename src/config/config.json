@@ -2,19 +2,17 @@
   "site": {
     "title": "Project Studi",
     "description": "An open-source notes repository",
-    "email": "dostsausc.tech@gmail.com",
+    "email": "dostsausc.web@gmail.com",
     "logo": "/src/assets/logo-light.svg",
     "logo_darkmode": "/src/assets/logo-dark.svg",
-    "logo_width": "349",
-    "logo_height": "32",
+    "logo_width": "190",
+    "logo_height": "60",
     "logo_text": "Studi"
   },
-
   "settings": {
     "search": true,
     "theme_switcher": true
   },
-
   "params": {
     "footer_contact": {
       "enable": true,
@@ -22,10 +20,9 @@
     },
     "copyright": "© 2026 DOST SA USC. All rights reserved."
   },
-
   "navigation_button": {
-    "enable": false,
-    "label": "How To ",
-    "link": "/getting-started/introduction/overview/"
+    "enable": true,
+    "label": "Getting Started",
+    "link": "/contribute/contribute"
   }
 }
