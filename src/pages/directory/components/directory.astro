@@ -109,12 +109,19 @@ const getIconSrc = (type: string) => {
           <img src="/directory-icons/primary-redo.svg" alt="Back" />
         </a>
 
-        <div class="breadcrumb-container">
+        <div
+          class="breadcrumb-container"
+          data-crumbs={JSON.stringify(context.breadcrumbs)}
+        >
           {
             context.breadcrumbs.map((crumb) => (
               <>
                 <span class="crumb-separator">/</span>
-                <a href={crumb.href} class="breadcrumb-link nav-item">
+                <a
+                  href={crumb.href}
+                  class="breadcrumb-link nav-item"
+                  data-label={crumb.label}
+                >
                   {crumb.label}
                 </a>
               </>
@@ -164,6 +171,11 @@ const getIconSrc = (type: string) => {
 </div>
 
 <script>
+  type BreadcrumbType = {
+    label: string;
+    href: string;
+  };
+
   const btn = document.getElementById("toggle-sidebar-btn");
   const sidebar = document.querySelector(".sidebar-column");
 
@@ -226,6 +238,79 @@ const getIconSrc = (type: string) => {
       }
     });
   });
+
+  const getMaxLabelLength = (): number => {
+    console.log("CURRENT WIDTH: ", window.innerWidth);
+    if (window.innerWidth < 600) {
+      const mobileCrumbs = truncateBreadcrumbs(all, 2);
+      const totalChars = mobileCrumbs.reduce(
+        (sum: number, crumb: BreadcrumbType) => sum + crumb.label.length,
+        0,
+      );
+      const charsPerPixel = totalChars / container.offsetWidth;
+      console.log("CHARS PER PIXEL: ", charsPerPixel);
+      if (charsPerPixel < 0.1) return Infinity;
+      if (charsPerPixel < 0.2) return 10;
+      return 10;
+    }
+    const totalChars = all.reduce(
+      (sum: number, crumb: BreadcrumbType) => sum + crumb.label.length,
+      0,
+    );
+    const charsPerPixel = totalChars / container.offsetWidth;
+    if (charsPerPixel < 0.1) return Infinity;
+    if (charsPerPixel < 0.2) return 40;
+    if (charsPerPixel < 0.3) return 30;
+    return 20;
+  };
+
+  const middleTruncate = (label: string, maxLength: number): string => {
+    if (maxLength === Infinity || label.length <= maxLength) return label;
+    const half = Math.floor((maxLength - 1) / 2);
+    return label.slice(0, half) + "…" + label.slice(-half);
+  };
+
+  const truncateBreadcrumbs = (
+    breadcrumbs: BreadcrumbType[],
+    maxVisible: number,
+  ) => {
+    if (breadcrumbs.length <= maxVisible) return breadcrumbs;
+    if (maxVisible === 2) {
+      return [
+        breadcrumbs[0],
+        { label: "…", href: "" },
+        breadcrumbs[breadcrumbs.length - 1],
+      ];
+    }
+    return [
+      breadcrumbs[0],
+      { label: "…", href: "" },
+      ...breadcrumbs.slice(-(maxVisible - 2)),
+    ];
+  };
+
+  const container = document.querySelector(
+    ".breadcrumb-container",
+  ) as HTMLElement;
+  const all = JSON.parse(container.dataset.crumbs ?? "[]") as BreadcrumbType[];
+
+  const render = (crumbs: BreadcrumbType[]) => {
+    const maxLength = getMaxLabelLength();
+    container.innerHTML = crumbs
+      .map((crumb: BreadcrumbType) =>
+        crumb.href
+          ? `<span class="crumb-separator">/</span><a href="${crumb.href}" class="breadcrumb-link nav-item" title="${crumb.label}">${middleTruncate(crumb.label, maxLength)}</a>`
+          : `<span class="crumb-separator">/</span><span>…</span>`,
+      )
+      .join("");
+  };
+  const update = () => {
+    const max = window.innerWidth < 700 ? 2 : 4;
+    render(truncateBreadcrumbs(all, max));
+  };
+
+  update();
+  window.addEventListener("resize", update);
 </script>
 
 <style is:global>
@@ -281,6 +366,7 @@ const getIconSrc = (type: string) => {
     margin: 0;
     overflow: hidden;
     border-radius: 6px;
+    padding: 2px;
   }
 
   .folder-header {
@@ -327,6 +413,7 @@ const getIconSrc = (type: string) => {
     .card-grid {
       display: grid;
       grid-template-columns: 1fr;
+      padding-inline: 1rem;
     }
 
     .card-grid > :global(*) {
@@ -366,6 +453,8 @@ const getIconSrc = (type: string) => {
       border-color 0.2s ease-in-out,
       color 0.2s ease-in-out;
     white-space: nowrap;
+    border-radius: 2px;
+    margin-bottom: 5px;
   }
 
   .navbar-tab-title {
@@ -475,7 +564,7 @@ const getIconSrc = (type: string) => {
     transition: all 0.2s ease;
     gap: 0.9rem;
     width: 100%;
-    padding: 1rem;
+    padding: 1rem 0;
     text-decoration: none;
     border-top: 1px solid var(--sl-color-gray-5);
   }
@@ -524,5 +613,31 @@ const getIconSrc = (type: string) => {
     padding: 3rem;
     margin: 1rem 0;
     min-height: 300px;
+  }
+
+  @media (max-width: 768px) {
+    .sl-container,
+    .content-panel,
+    .sl-markdown-content {
+      padding-inline: 0.2rem !important;
+      margin-inline: 0 !important;
+    }
+
+    .directory-container {
+      padding: 0;
+    }
+
+    .file-window {
+      padding: 0;
+      border-radius: 0;
+    }
+
+    .card-grid {
+      padding-inline: 1rem;
+    }
+
+    .content-panel {
+      padding-block-end: 0rem !important;
+    }
   }
 </style>
