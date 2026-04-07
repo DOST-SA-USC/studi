@@ -2,7 +2,6 @@
 import type { Directory } from "@/pages/directory/types/directory";
 import { buildDirectoryContext } from "@/pages/directory/utils/directoryNavigation";
 import { fetchDirectory } from "@/pages/directory/utils/directoryServer.ts";
-import Breadcrumb from "@/components/Breadcrumb.astro";
 
 interface Props {
   entries?: Directory;
@@ -273,7 +272,7 @@ const getIconSrc = (type: string) => {
 
   const truncateBreadcrumbs = (
     breadcrumbs: BreadcrumbType[],
-    maxVisible: any,
+    maxVisible: number,
   ) => {
     if (breadcrumbs.length <= maxVisible) return breadcrumbs;
     if (maxVisible === 2) {
