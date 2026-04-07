@@ -172,6 +172,11 @@ const getIconSrc = (type: string) => {
 </div>
 
 <script>
+  type BreadcrumbType = {
+    label: string;
+    href: string;
+  };
+
   const btn = document.getElementById("toggle-sidebar-btn");
   const sidebar = document.querySelector(".sidebar-column");
 
@@ -240,7 +245,7 @@ const getIconSrc = (type: string) => {
     if (window.innerWidth < 600) {
       const mobileCrumbs = truncateBreadcrumbs(all, 2);
       const totalChars = mobileCrumbs.reduce(
-        (sum: number, crumb: any) => sum + crumb.label.length,
+        (sum: number, crumb: BreadcrumbType) => sum + crumb.label.length,
         0,
       );
       const charsPerPixel = totalChars / container.offsetWidth;
@@ -250,7 +255,7 @@ const getIconSrc = (type: string) => {
       return 10;
     }
     const totalChars = all.reduce(
-      (sum: number, crumb: any) => sum + crumb.label.length,
+      (sum: number, crumb: BreadcrumbType) => sum + crumb.label.length,
       0,
     );
     const charsPerPixel = totalChars / container.offsetWidth;
@@ -266,18 +271,21 @@ const getIconSrc = (type: string) => {
     return label.slice(0, half) + "…" + label.slice(-half);
   };
 
-  const truncateBreadcrumbs = (breadcrumbs: any, maxVisible: any) => {
+  const truncateBreadcrumbs = (
+    breadcrumbs: BreadcrumbType[],
+    maxVisible: any,
+  ) => {
     if (breadcrumbs.length <= maxVisible) return breadcrumbs;
     if (maxVisible === 2) {
       return [
         breadcrumbs[0],
-        { label: "…", href: null },
+        { label: "…", href: "" },
         breadcrumbs[breadcrumbs.length - 1],
       ];
     }
     return [
       breadcrumbs[0],
-      { label: "…", href: null },
+      { label: "…", href: "" },
       ...breadcrumbs.slice(-(maxVisible - 2)),
     ];
   };
@@ -285,12 +293,12 @@ const getIconSrc = (type: string) => {
   const container = document.querySelector(
     ".breadcrumb-container",
   ) as HTMLElement;
-  const all = JSON.parse(container.dataset.crumbs ?? "[]");
+  const all = JSON.parse(container.dataset.crumbs ?? "[]") as BreadcrumbType[];
 
-  const render = (crumbs: any) => {
+  const render = (crumbs: BreadcrumbType[]) => {
     const maxLength = getMaxLabelLength();
     container.innerHTML = crumbs
-      .map((crumb: any) =>
+      .map((crumb: BreadcrumbType) =>
         crumb.href
           ? `<span class="crumb-separator">/</span><a href="${crumb.href}" class="breadcrumb-link nav-item" title="${crumb.label}">${middleTruncate(crumb.label, maxLength)}</a>`
           : `<span class="crumb-separator">/</span><span>…</span>`,
