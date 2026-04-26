@@ -62,6 +62,7 @@ const getIconSrc = (type: string) => {
   </div>
 
   <div class="subfolder-content">
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
     <div class="sidebar-column bg-lightmode-body dark:bg-body">
       <div class="sidebar-scroll-wrapper">
         <div class="sidebar-header">
@@ -116,7 +117,7 @@ const getIconSrc = (type: string) => {
           {
             context.breadcrumbs.map((crumb) => (
               <>
-                <span class="crumb-separator">/</span>
+                <span class="crumb-separator">›</span>
                 <a
                   href={crumb.href}
                   class="breadcrumb-link nav-item"
@@ -179,9 +180,15 @@ const getIconSrc = (type: string) => {
   const btn = document.getElementById("toggle-sidebar-btn");
   const sidebar = document.querySelector(".sidebar-column");
 
-  btn?.addEventListener("click", () => {
+  const overlay = document.getElementById("sidebar-overlay");
+
+  const toggleSidebar = () => {
     sidebar?.classList.toggle("active");
-  });
+    overlay?.classList.toggle("active");
+  };
+
+  btn?.addEventListener("click", toggleSidebar);
+  overlay?.addEventListener("click", toggleSidebar);
 
   const backBtn = document.getElementById("history-back");
   const fwdBtn = document.getElementById("history-forward");
@@ -240,7 +247,6 @@ const getIconSrc = (type: string) => {
   });
 
   const getMaxLabelLength = (): number => {
-    console.log("CURRENT WIDTH: ", window.innerWidth);
     if (window.innerWidth < 600) {
       const mobileCrumbs = truncateBreadcrumbs(all, 2);
       const totalChars = mobileCrumbs.reduce(
@@ -248,7 +254,6 @@ const getIconSrc = (type: string) => {
         0,
       );
       const charsPerPixel = totalChars / container.offsetWidth;
-      console.log("CHARS PER PIXEL: ", charsPerPixel);
       if (charsPerPixel < 0.1) return Infinity;
       if (charsPerPixel < 0.2) return 10;
       return 10;
@@ -299,8 +304,8 @@ const getIconSrc = (type: string) => {
     container.innerHTML = crumbs
       .map((crumb: BreadcrumbType) =>
         crumb.href
-          ? `<span class="crumb-separator">/</span><a href="${crumb.href}" class="breadcrumb-link nav-item" title="${crumb.label}">${middleTruncate(crumb.label, maxLength)}</a>`
-          : `<span class="crumb-separator">/</span><span>…</span>`,
+          ? `<span class="crumb-separator">›</span><a href="${crumb.href}" class="breadcrumb-link nav-item" title="${crumb.label}">${middleTruncate(crumb.label, maxLength)}</a>`
+          : `<span class="crumb-separator">›</span><span>…</span>`,
       )
       .join("");
   };
@@ -315,30 +320,45 @@ const getIconSrc = (type: string) => {
 
 <style is:global>
   .skeleton {
-    background-color: var(--sl-color-gray-5);
-    opacity: 0.5;
-    animation: pulse 1.5s infinite ease-in-out;
+    background: linear-gradient(
+      90deg,
+      var(--sl-color-gray-5) 25%,
+      var(--sl-color-gray-4) 50%,
+      var(--sl-color-gray-5) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite ease-in-out;
   }
 
   .skeleton-text {
-    background-color: var(--sl-color-gray-5);
+    background: linear-gradient(
+      90deg,
+      var(--sl-color-gray-5) 25%,
+      var(--sl-color-gray-4) 50%,
+      var(--sl-color-gray-5) 75%
+    );
+    background-size: 200% 100%;
     width: 75%;
     height: 0.5rem;
     border-radius: 0.125rem;
-    opacity: 0.5;
-    animation: pulse 1.5s infinite ease-in-out;
+    animation: shimmer 1.5s infinite ease-in-out;
   }
 
-  @keyframes pulse {
+  @keyframes shimmer {
     0% {
-      opacity: 0.25;
-    }
-    50% {
-      opacity: 1;
+      background-position: 200% 0;
     }
     100% {
-      opacity: 0.25;
+      background-position: -200% 0;
     }
+  }
+
+  /* Card grid fade transition */
+  .card-grid {
+    transition: opacity 0.2s ease;
+  }
+  .card-grid.loading {
+    opacity: 0.5;
   }
 
   .nav-item {
@@ -399,9 +419,14 @@ const getIconSrc = (type: string) => {
     border-radius: 6px;
     flex-grow: 1;
     min-height: 30px;
-    max-width:;
     background-color: rgba(102, 115, 188, 0.1);
     padding: 10px;
+  }
+
+  .crumb-separator {
+    margin: 0 0.35rem;
+    color: var(--sl-color-gray-3);
+    font-weight: 400;
   }
 
   .breadcrumb-link {
@@ -436,6 +461,20 @@ const getIconSrc = (type: string) => {
     overflow-x: auto;
     width: 100%;
     scrollbar-width: none;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 2rem,
+      black calc(100% - 2rem),
+      transparent
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 2rem,
+      black calc(100% - 2rem),
+      transparent
+    );
   }
 
   .navbar-scroll-wrapper::-webkit-scrollbar {
@@ -443,18 +482,30 @@ const getIconSrc = (type: string) => {
   }
 
   .navbar-tab {
-    min-width: fit-content;
+    min-width: 120px;
     display: block;
     padding: 1rem;
     text-decoration: none;
     overflow: hidden;
     transition:
       background-color 0.2s ease-in-out,
-      border-color 0.2s ease-in-out,
       color 0.2s ease-in-out;
     white-space: nowrap;
     border-radius: 2px;
     margin-bottom: 5px;
+    position: relative;
+  }
+
+  .navbar-tab::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #6673bc;
+    transform: scaleX(0);
+    transition: transform 0.2s ease-in-out;
   }
 
   .navbar-tab-title {
@@ -464,18 +515,22 @@ const getIconSrc = (type: string) => {
     color: var(--sl-color-gray-2);
     text-overflow: ellipsis;
     overflow: hidden;
+    text-align: center;
     transition: color 0.2s ease;
   }
 
-  .navbar-tab:hover .tab-title {
+  .navbar-tab:hover .navbar-tab-title {
     color: #6673bc;
   }
 
   .navbar-tab:hover,
   .navbar-tab.active {
     background-color: rgba(102, 115, 188, 0.1);
-    border-bottom: 3px solid #6673bc;
-    padding-bottom: calc(1rem - 3px);
+  }
+
+  .navbar-tab:hover::after,
+  .navbar-tab.active::after {
+    transform: scaleX(1);
   }
 
   /* ==== SIDEBAR ==== */
@@ -533,9 +588,18 @@ const getIconSrc = (type: string) => {
     word-break: break-word;
   }
 
-  .sidebar-tab:hover,
+  .sidebar-tab:hover {
+    background-color: rgba(102, 115, 188, 0.1);
+  }
+
   .sidebar-tab.active {
     background-color: rgba(102, 115, 188, 0.1);
+    border-left: 3px solid #6673bc;
+    padding-left: calc(1rem - 3px);
+  }
+
+  .sidebar-overlay {
+    display: none;
   }
 
   @media (max-width: 1150px) {
@@ -544,7 +608,7 @@ const getIconSrc = (type: string) => {
       transform: translateX(-100%);
       transition: transform 0.2s ease-in-out;
       border-right: 1px solid var(--sl-color-gray-5);
-      z-index: 10;
+      z-index: 11;
     }
 
     .sidebar-column.active {
@@ -553,6 +617,22 @@ const getIconSrc = (type: string) => {
 
     .sidebar-toggle {
       display: block;
+    }
+
+    .sidebar-overlay {
+      display: block;
+      position: absolute;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
     }
   }
 
@@ -588,6 +668,7 @@ const getIconSrc = (type: string) => {
 
   .Item-card:hover {
     background-color: rgba(102, 115, 188, 0.05);
+    padding-left: 0.5rem;
   }
 
   .status-msg {
