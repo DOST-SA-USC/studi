@@ -22,7 +22,7 @@ export const locales = locals;
 export default defineConfig({
   output: "server",
   image: {
-    service: { entrypoint: "astro/assets/services/noop" },
+    service: { entrypoint: "astro/assets/services/sharp" },
   },
 
   integrations: [

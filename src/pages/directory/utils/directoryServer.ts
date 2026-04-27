@@ -9,8 +9,6 @@ const CACHE_TTL = 1000 * 60 * 5;
 export const fetchDirectory = async (id: string): Promise<fetchResult> => {
   const now = Date.now();
 
-  console.log(id);
-
   const cached = cache.get(id);
   if (cached && now < cached.expiry) {
     console.log(`[Cache Hit] Serving ${id} from memory`);

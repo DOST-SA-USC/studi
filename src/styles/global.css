@@ -125,10 +125,29 @@
     padding-block: 0 !important;
   }
 
+  header.has-sidebar {
+    display: flex !important;
+    align-items: center !important;
+    padding-block: 0 !important;
+  }
+
   nav.navbar {
     width: 100%;
     align-items: center !important;
     padding-left: 0px;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    gap: 0.5rem;
+  }
+
+  /* Keep logo and actions on the same row */
+  nav.navbar > div.order-0 {
+    flex-shrink: 0;
+  }
+
+  nav.navbar > .navbar-actions {
+    flex-shrink: 0;
+    gap: 0.25rem;
   }
 
   a.navbar-brand {
