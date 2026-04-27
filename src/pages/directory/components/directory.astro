@@ -11,16 +11,16 @@ interface Props {
 const { entries = [], pathSegments } = Astro.props;
 const BASE_URL = "/directory";
 
-// ==== NAVBAR ITEMS ====
-const navbarItems = entries;
+// ==== SIDEBAR ITEMS (Programs) ====
+const sidebarItems = entries;
 const activeProgramId = pathSegments[0];
 
-// ==== SIDEBAR ITEMS ====
+// ==== NAVBAR ITEMS (Courses) ====
 const activeProgram = entries.find((p) => p.id === activeProgramId);
-const sidebarResult = activeProgram
+const navbarResult = activeProgram
   ? await fetchDirectory(activeProgramId)
   : { entries: [], errorMessage: undefined };
-const sidebarItems = sidebarResult.entries;
+const navbarItems = navbarResult.entries;
 const activeCourseId = pathSegments[1];
 
 // ==== GRID ITEMS ====
@@ -40,61 +40,29 @@ const getIconSrc = (type: string) => {
 ---
 
 <div class="directory-container">
-  <div class="navbar-container">
-    <a id="toggle-sidebar-btn" class="sidebar-toggle">
-      <img src="/directory-icons/primary-menu.svg" alt="MENU" />
-    </a>
-    <div id="navbar-target" class="navbar-scroll-wrapper">
-      {
-        navbarItems.map((item) => (
-          <a
-            href={`${BASE_URL}/${item.id}`}
-            class:list={[
-              "navbar-tab nav-item",
-              { active: item.id === activeProgramId },
-            ]}
-          >
-            <div class="navbar-tab-title">{item.name}</div>
-          </a>
-        ))
-      }
-    </div>
-  </div>
-
   <div class="subfolder-content">
     <div id="sidebar-overlay" class="sidebar-overlay"></div>
     <div class="sidebar-column bg-lightmode-body dark:bg-body">
       <div class="sidebar-scroll-wrapper">
         <div class="sidebar-header">
-          <span class="sidebar-title">
-            {activeProgram ? activeProgram.name : "Programs"}
-          </span>
+          <span class="sidebar-title"> Programs </span>
         </div>
         <div id="sidebar-target" class="sidebar-content">
           {
             sidebarItems.length > 0 ? (
-              sidebarItems.map((item) => {
-                const currentId =
-                  item.type === "shortcut" ? item.targetId : item.id;
-
-                return (
-                  <a
-                    href={`${BASE_URL}/${activeProgramId}/${currentId}`}
-                    class:list={[
-                      "sidebar-tab nav-item",
-                      { active: currentId === activeCourseId },
-                    ]}
-                  >
-                    <div class="sidebar-tab-title">{item.name}</div>
-                  </a>
-                );
-              })
+              sidebarItems.map((item) => (
+                <a
+                  href={`${BASE_URL}/${item.id}`}
+                  class:list={[
+                    "sidebar-tab nav-item",
+                    { active: item.id === activeProgramId },
+                  ]}
+                >
+                  <div class="sidebar-tab-title">{item.name}</div>
+                </a>
+              ))
             ) : (
-              <div class="status-msg empty-msg">
-                {activeProgram
-                  ? "No courses available."
-                  : "Select a program above."}
-              </div>
+              <div class="status-msg empty-msg">No programs available.</div>
             )
           }
         </div>
@@ -102,6 +70,31 @@ const getIconSrc = (type: string) => {
     </div>
 
     <div class="file-window bg-lightmode-dark dark:bg-dark">
+      <div class="navbar-container">
+        <a id="toggle-sidebar-btn" class="sidebar-toggle">
+          <img src="/directory-icons/primary-menu.svg" alt="MENU" />
+        </a>
+        <div id="navbar-target" class="navbar-scroll-wrapper">
+          {
+            navbarItems.map((item) => {
+              const currentId =
+                item.type === "shortcut" ? item.targetId : item.id;
+
+              return (
+                <a
+                  href={`${BASE_URL}/${activeProgramId}/${currentId}`}
+                  class:list={[
+                    "navbar-tab nav-item",
+                    { active: currentId === activeCourseId },
+                  ]}
+                >
+                  <div class="navbar-tab-title">{item.name}</div>
+                </a>
+              );
+            })
+          }
+        </div>
+      </div>
       <div class="folder-header">
         <a id="history-back" class="undo-redo-btn">
           <img src="/directory-icons/primary-undo.svg" alt="Back" />
@@ -161,8 +154,8 @@ const getIconSrc = (type: string) => {
           ) : (
             <div class="status-msg empty-msg-grid prompt">
               {activeProgram
-                ? "Select a course from the sidebar to view its contents."
-                : "Select a program from the top bar to get started."}
+                ? "Select a course from the tabs above to view its contents."
+                : "Select a program from the sidebar to get started."}
             </div>
           )
         }
@@ -385,7 +378,7 @@ const getIconSrc = (type: string) => {
     flex-grow: 1;
     margin: 0;
     overflow: hidden;
-    border-radius: 6px;
+    border-radius: 12px;
     padding: 2px;
   }
 
@@ -538,6 +531,7 @@ const getIconSrc = (type: string) => {
     width: 300px;
     display: flex;
     flex-direction: column;
+    gap: 3px;
     height: 100%;
     flex-shrink: 0;
   }
